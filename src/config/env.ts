@@ -1,28 +1,28 @@
 function required(name: string): string {
-    const value = Bun.env[name];
-    if (!value) {
-        throw new Error(`Missing required env var: ${name}`)
-    }
-    return value;
+  const value = Bun.env[name];
+  if (!value) {
+    throw new Error(`Missing required env var: ${name}`)
+  }
+  return value;
 }
 
 function optional(name: string, fallback: string): string {
-    return Bun.env[name] ?? fallback;
+  return Bun.env[name] ?? fallback;
 }
 
 export const env = {
-    port: Number(optional("PORT", "4000")),
-    workerId: Number(optional("WORKER_ID", "1")),
-    baseUrl: optional("BASE_URL", "http://localhost:4000"),
+  port: Number(optional("PORT", "4000")),
+  workerId: Number(optional("WORKER_ID", "1")),
+  baseUrl: optional("BASE_URL", "http://localhost:4000"),
 
-    redisUrl: required("REDIS_URL"),
+  redisUrl: required("REDIS_URL"),
 
-    mongoUrl: required("MONGO_URL"),
-    mongoDbName: optional("MONGO_DB_NAME", "urlshortener"),
+  mongoUrl: required("MONGO_URL"),
+  mongoDbName: optional("MONGO_DB_NAME", "urlshortener"),
 
-    supabaseJwtSecret: required("SUPABASE_JWT_SECRET"),
+  supabaseJwtSecret: required("SUPABASE_JWT_SECRET"),
 
-    rateLimits: {
+  rateLimits: {
     anon: {
       create: Number(optional("RATE_LIMIT_ANON_CREATE", "10")),
       read: Number(optional("RATE_LIMIT_ANON_READ", "100")),

@@ -23,6 +23,10 @@ app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("[server] unhandled error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
 
 app.listen(env.port, () => {
   console.log(`url-shortener listening on :${env.port} (worker ${env.workerId})`);
