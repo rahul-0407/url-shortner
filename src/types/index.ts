@@ -1,6 +1,6 @@
 export interface UrlRecord{
     shortCode: string;
-    longCode: string;
+    longUrl: string;
     userId: string | null;
     createdAt: number;
     expiresAt: number | null;

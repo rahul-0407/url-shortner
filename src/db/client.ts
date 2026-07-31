@@ -9,7 +9,7 @@ export async function connectDb(): Promise<Db> {
 
     client = new MongoClient(env.mongoUrl)
     await client.connect();
-    db = await client.db(env.mongoDbName);
+    db = client.db(env.mongoDbName);
 
     const urls = db.collection("urls");
     await urls.createIndex({ shortCode: 1 }, { unique: true });
