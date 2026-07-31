@@ -1,5 +1,6 @@
 import { redis, cacheGet, cacheSet, cacheTouch, cacheDelete } from "../lib/redis";
 import * as repo from "../db/urlRepository";
+import { env } from "../config/env";
 import type { CreateUrlInput, UrlRecord, ClickEvent } from "../types";
 
 const CLICK_QUEUE_KEY = "queue:clicks";
