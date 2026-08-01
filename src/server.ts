@@ -1,6 +1,7 @@
 import express from "express";
 import { env } from "./config/env";
 import { connectDb } from "./db/client";
+import { attachAuth } from "./middleware/auth";
 import urlsRoutes from "./routes/urls.routes";
 import redirectRoutes from "./routes/redirect.routes";
 
@@ -9,6 +10,7 @@ await connectDb();
 const app = express();
 
 app.use(express.json());
+app.use(attachAuth);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
