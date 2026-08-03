@@ -52,14 +52,14 @@ function limitFor(tier: AuthContext["tier"], bucket: Bucket): LimitConfig {
     }
 }
 
-export interface RateLimitResult{
+export interface RateLimitResult {
     allowed: boolean;
     remaining: number;
 }
 
 export async function checkRateLimit(auth: AuthContext, bucket: Bucket): Promise<RateLimitResult> {
     const key = `ratelimit:${auth.userId ?? "anon"}:${bucket}`;
-    const { capacity, refillPerSecond} = limitFor(auth.tier, bucket)
+    const { capacity, refillPerSecond } = limitFor(auth.tier, bucket)
     const [allowed, remaining] = (await redis.eval(
         TOKEN_BUCKET_SCRIPT,
         1,
@@ -70,19 +70,22 @@ export async function checkRateLimit(auth: AuthContext, bucket: Bucket): Promise
         1
     )) as [number, number]
 
-    return { allowed: allowed === 1, remaining }; 
+    return { allowed: allowed === 1, remaining };
 }
 
 export function rateLimit(bucket: Bucket) {
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { allowed, remaining } = await checkRateLimit(req.auth, bucket);
-        res.setHeader("X-RateLimit-Remaining", String(remaining));
+        try {
+            const { allowed, remaining } = await checkRateLimit(req.auth, bucket);
+            res.setHeader("X-RateLimit-Remaining", String(remaining));
 
-        if(!allowed) {
-            res.status(429).json({error: "Rate limit exceeded"});
-            return;
+            if (!allowed) {
+                res.status(429).json({ error: "Rate limit exceeded" });
+                return;
+            }
+        } catch (err) {
+            console.error("[rateLimiter] Redis error, failing open:", err);
         }
-
         next();
     };
 }
