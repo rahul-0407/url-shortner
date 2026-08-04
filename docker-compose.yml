@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
     dns:
       - 8.8.8.8
       - 1.1.1.1
@@ -22,7 +24,9 @@ services:
     restart: unless-stopped
 
   click-worker:
-    build: .
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
     dns:
       - 8.8.8.8
       - 1.1.1.1
