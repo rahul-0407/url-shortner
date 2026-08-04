@@ -20,7 +20,7 @@ export const env = {
   mongoUrl: required("MONGO_URL"),
   mongoDbName: optional("MONGO_DB_NAME", "urlshortener"),
 
-  supabaseJwtSecret: required("SUPABASE_JWT_SECRET"),
+  supabaseUrl: required("SUPABASE_URL"),
 
   rateLimits: {
     anon: {

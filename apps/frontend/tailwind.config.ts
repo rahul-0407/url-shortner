@@ -1,0 +1,60 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: "class",
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        background: "#131314",
+        "on-background": "#e5e2e3",
+        surface: "#131314",
+        "on-surface": "#e5e2e3",
+        "on-surface-variant": "#c6c5d8",
+        primary: "#bec2ff",
+        "on-primary": "#000ba6",
+        "primary-container": "#7a85ff",
+        secondary: "#50d8e9",
+        "secondary-container": "#00b1c2",
+        tertiary: "#ffb689",
+        "tertiary-container": "#e0731d",
+        error: "#ffb4ab",
+        outline: "#8f8fa1",
+        "outline-variant": "#454655",
+        "surface-container": "#201f21",
+        "surface-container-low": "#1c1b1d",
+        "surface-container-lowest": "#0e0e0f",
+        "surface-container-high": "#2a2a2b",
+        "surface-container-highest": "#353436",
+        "custom-bg": "#070708",
+        "custom-divider": "#232426",
+        "custom-card-bg": "#101112",
+        "custom-sidebar": "#0d0e0f",
+        "custom-panel": "#111214",
+        "custom-text-muted": "#9A9DA3",
+        "custom-btn-primary": "#5E6BFF",
+        "custom-btn-text": "#F0F1F2",
+      },
+      fontFamily: {
+        h1: ["Manrope"],
+        h2: ["Manrope"],
+        h3: ["Manrope"],
+        h4: ["Manrope"],
+        body: ["Inter"],
+        mono: ["Inter"],
+      },
+      spacing: {
+        xs: "4px",
+        sm: "8px",
+        md: "16px",
+        lg: "24px",
+        xl: "40px",
+        gutter: "20px",
+        "margin-safe": "32px",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

@@ -1,41 +1,53 @@
-import jwt from "jsonwebtoken"
-import type { Request, Response, NextFunction } from "express"
-import { env } from "../config/env"
-import type { UserTier } from "../types"
+import { createRemoteJWKSet, jwtVerify } from "jose";
+import type { Request, Response, NextFunction } from "express";
+import { env } from "../config/env";
+import type { UserTier } from "../types";
 
-interface SuperbaseJwtPayload {
-    sub: string;
-    email?: string;
-    app_metadata?: { tier?: UserTier };
+interface SupabaseJwtPayload {
+  sub: string;
+  email?: string;
+  app_metadata?: { tier?: UserTier };
 }
 
-export function attachAuth(req: Request, _res: Response, next: NextFunction): void {
-    const authHeader = req.headers.authorization ?? null;
+let jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
 
-    if (!authHeader?.startsWith("Bearer ")) {
-        req.auth = { userId: null, tier: "anon" }
-        return next();
-    }
+function getJWKS() {
+  if (!jwks) {
+    const url = `${env.supabaseUrl.replace(/\/$/, "")}/auth/v1/.well-known/jwks.json`;
+    jwks = createRemoteJWKSet(new URL(url));
+  }
+  return jwks;
+}
 
-    const token = authHeader.slice("Bearer ".length)
+export async function attachAuth(req: Request, _res: Response, next: NextFunction): Promise<void> {
+  const authHeader = req.headers.authorization ?? null;
 
-    try {
-        const payload = jwt.verify(token, env.supabaseJwtSecret) as SuperbaseJwtPayload;
-        req.auth = {
-            userId: payload.sub,
-            tier: payload.app_metadata?.tier ?? "free",
-        };
-    } catch (error) {
-        req.auth = { userId: null, tier: "anon" };
-    }
+  if (!authHeader?.startsWith("Bearer ")) {
+    req.auth = { userId: null, tier: "anon" };
+    return next();
+  }
 
-    next();
+  const token = authHeader.slice("Bearer ".length);
+
+  try {
+    const { payload } = await jwtVerify(token, getJWKS());
+    const supabasePayload = payload as unknown as SupabaseJwtPayload;
+    req.auth = {
+      userId: supabasePayload.sub ?? null,
+      tier: supabasePayload.app_metadata?.tier ?? "free",
+    };
+  } catch (error) {
+    console.error("[auth] Token verification failed:", error);
+    req.auth = { userId: null, tier: "anon" };
+  }
+
+  next();
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction): void {
-    if (!req.auth.userId) {
-        res.status(401).json({ error: "Authentication required" });
-        return;
-    }
-    next();
+  if (!req.auth?.userId) {
+    res.status(401).json({ error: "Authentication required" });
+    return;
+  }
+  next();
 }

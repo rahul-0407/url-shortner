@@ -15,7 +15,7 @@ services:
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=${MONGO_URL}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
-      - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
     depends_on:
       redis:
         condition: service_healthy
@@ -35,6 +35,7 @@ services:
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=${MONGO_URL}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - SUPABASE_URL=${SUPABASE_URL}
     depends_on:
       redis:
         condition: service_healthy
