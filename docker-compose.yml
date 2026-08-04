@@ -1,6 +1,9 @@
 services:
   app:
     build: .
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - "4000:4000"
     environment:
@@ -20,6 +23,9 @@ services:
 
   click-worker:
     build: .
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     command: ["bun", "run", "worker/clickWorker.ts"]
     environment:
       - REDIS_URL=redis://redis:6379
