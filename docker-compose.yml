@@ -13,14 +13,12 @@ services:
       - WORKER_ID=1
       - BASE_URL=http://localhost
       - REDIS_URL=redis://redis:6379
-      - MONGO_URL=${MONGO_URL}
-      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=${DATABASE_URL}
       - SUPABASE_URL=${SUPABASE_URL}
     depends_on:
       redis:
         condition: service_healthy
-      # mongo:
-      #   condition: service_started
     restart: unless-stopped
 
   click-worker:
@@ -33,14 +31,12 @@ services:
     command: ["bun", "run", "worker/clickWorker.ts"]
     environment:
       - REDIS_URL=redis://redis:6379
-      - MONGO_URL=${MONGO_URL}
-      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - DATABASE_URL=${DATABASE_URL}
       - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
     depends_on:
       redis:
         condition: service_healthy
-      # mongo:
-      #   condition: service_started
     restart: unless-stopped
 
   redis:
@@ -55,15 +51,6 @@ services:
       timeout: 3s
       retries: 5
     restart: unless-stopped
-
-  # mongo:
-  #   image: mongo:7
-  #   container_name: mongo-url-shortner
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data/db
-  #   restart: unless-stopped
 
   nginx:
     image: nginx:alpine

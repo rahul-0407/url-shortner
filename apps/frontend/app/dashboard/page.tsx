@@ -484,7 +484,7 @@ export default function DashboardPage() {
                           Storage
                         </div>
                         <div className="text-xs text-[#e5e2e3] font-mono">
-                          MongoDB
+                          Supabase Postgres
                         </div>
                       </div>
                     </div>

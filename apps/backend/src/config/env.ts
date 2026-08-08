@@ -10,6 +10,8 @@ function optional(name: string, fallback: string): string {
   return Bun.env[name] ?? fallback;
 }
 
+const dbUrl = Bun.env.DATABASE_URL ?? Bun.env.POSTGRES_URL ?? Bun.env.SUPABASE_DB_URL ?? "";
+
 export const env = {
   port: Number(optional("PORT", "4000")),
   workerId: Number(optional("WORKER_ID", "1")),
@@ -17,10 +19,9 @@ export const env = {
 
   redisUrl: required("REDIS_URL"),
 
-  mongoUrl: required("MONGO_URL"),
-  mongoDbName: optional("MONGO_DB_NAME", "urlshortener"),
-
-  supabaseUrl: required("SUPABASE_URL"),
+  databaseUrl: dbUrl,
+  supabaseUrl: optional("SUPABASE_URL", "https://cgzfvvwtmltwstvpmzzy.supabase.co"),
+  supabaseServiceKey: optional("SUPABASE_SERVICE_ROLE_KEY", Bun.env.SUPABASE_ANON_KEY ?? Bun.env.SUPABASE_KEY ?? ""),
 
   rateLimits: {
     anon: {
