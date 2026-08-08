@@ -132,28 +132,3 @@ export async function deleteByCode(shortCode: string, userId: string): Promise<b
     return (count ?? 0) > 0;
   }
 }
-
-export async function incrementClicks(shortCode: string, by = 1): Promise<void> {
-  const mode = getDbMode();
-  if (mode === "pg") {
-    const pool = getPool();
-    await pool.query(
-      `UPDATE urls SET click_count = click_count + $1 WHERE short_code = $2`,
-      [by, shortCode]
-    );
-  } else {
-    const supabase = getSupabase();
-    const { data } = await supabase
-      .from("urls")
-      .select("click_count")
-      .eq("short_code", shortCode)
-      .maybeSingle();
-
-    if (data) {
-      await supabase
-        .from("urls")
-        .update({ click_count: (data.click_count || 0) + by })
-        .eq("short_code", shortCode);
-    }
-  }
-}

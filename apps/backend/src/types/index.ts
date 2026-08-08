@@ -23,4 +23,9 @@ export interface AuthContext {
 export interface ClickEvent {
     shortCode: string;
     timestamp: number;
+    ipHash: string;
+    country: string;
+    deviceType: "mobile" | "desktop" | "tablet" | "bot" | "unknown";
+    userAgentHash: string;
+    userId: string | null;
 }

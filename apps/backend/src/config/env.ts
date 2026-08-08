@@ -37,6 +37,15 @@ export const env = {
       read: Number(optional("RATE_LIMIT_PRO_READ", "10000")),
     },
   },
+
+  kafkaBrokers: optional("KAFKA_BROKERS", "localhost:9092"),
+  kafkaClientId: optional("KAFKA_CLIENT_ID", "url-shortener-backend"),
+  kafkaTopic: optional("KAFKA_TOPIC", "clicks"),
+
+  clickhouseHost: optional("CLICKHOUSE_HOST", "http://localhost:8123"),
+  clickhouseUsername: optional("CLICKHOUSE_USERNAME", "default"),
+  clickhousePassword: optional("CLICKHOUSE_PASSWORD", ""),
+  clickhouseDatabase: optional("CLICKHOUSE_DATABASE", "default"),
 } as const;
 
 if (env.workerId < 0 || env.workerId > 1023) {

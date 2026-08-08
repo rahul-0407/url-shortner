@@ -16,27 +16,39 @@ services:
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - DATABASE_URL=${DATABASE_URL}
       - SUPABASE_URL=${SUPABASE_URL}
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=clicks
+      - CLICKHOUSE_HOST=http://clickhouse:8123
     depends_on:
       redis:
         condition: service_healthy
+      kafka:
+        condition: service_started
+      clickhouse:
+        condition: service_started
     restart: unless-stopped
 
-  click-worker:
+  stream-processor:
     build:
       context: ./apps/backend
       dockerfile: Dockerfile
     dns:
       - 8.8.8.8
       - 1.1.1.1
-    command: ["bun", "run", "worker/clickWorker.ts"]
+    command: ["bun", "run", "processor/analyticsProcessor.ts"]
     environment:
       - REDIS_URL=redis://redis:6379
       - DATABASE_URL=${DATABASE_URL}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=clicks
+      - CLICKHOUSE_HOST=http://clickhouse:8123
     depends_on:
-      redis:
-        condition: service_healthy
+      kafka:
+        condition: service_started
+      clickhouse:
+        condition: service_started
     restart: unless-stopped
 
   redis:
@@ -52,6 +64,37 @@ services:
       retries: 5
     restart: unless-stopped
 
+  kafka:
+    image: redpandadata/redpanda:v24.1.1
+    container_name: kafka-url-shortner
+    command:
+      - redpanda
+      - start
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://kafka:9092,external://localhost:19092
+      - --mode
+      - dev-container
+      - --smp
+      - "1"
+    ports:
+      - "19092:19092"
+      - "9092:9092"
+    restart: unless-stopped
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse-url-shortner
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    restart: unless-stopped
+
   nginx:
     image: nginx:alpine
     ports:
@@ -61,6 +104,3 @@ services:
     depends_on:
       - app
     restart: unless-stopped
-
-volumes:
-  mongo-data:
