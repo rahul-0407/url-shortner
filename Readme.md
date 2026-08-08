@@ -58,6 +58,7 @@ flowchart TD
 ## Why each piece is what it is
 
 ### Short code generation — Snowflake + Base62
+
 Random Base62 needs a collision check on every write; that doesn't scale.
 Instead: a Snowflake-style 64-bit ID (`timestamp | workerId | sequence`) is
 generated **in-process, with zero network calls and zero coordination**
@@ -70,6 +71,7 @@ See `apps/backend/src/lib/snowflake.ts` / `base62.ts`.
 > short-URL length.
 
 ### Database — sharded on hashed `shortCode`
+
 Access pattern is a pure key-value point lookup, read-heavy (100-1000:1
 read:write). Sharding on a **hash** of `shortCode` (not a range key like
 `createdAt`) spreads writes evenly and avoids hot-shard problems. Currently
@@ -79,26 +81,30 @@ no manual shard management. Only `db/client.ts` and `db/urlRepository.ts`
 would change to migrate — nothing else in the app touches the DB directly.
 
 ### Redis — two jobs, one instance
+
 - **Cache**: cache-aside pattern, `allkeys-lru` eviction, sliding TTL (touched
   on every read so hot links never expire, cold ones fall out naturally).
 - **Rate limiting**: atomic token-bucket via a Lua script (`EVAL`) so
   check-and-decrement never races across concurrent requests.
 
 ### Rate limiting — token bucket
+
 Allows short bursts while enforcing a steady average rate (same family of
 algorithm Stripe/GitHub/AWS API Gateway use). Tiered by auth status:
 
-| Tier | Create | Read (redirect) |
-|---|---|---|
-| Anonymous | 10/min | 100/min |
-| Free | 30/min | 1,000/min |
-| Pro | 300/min | 10,000/min |
+| Tier      | Create  | Read (redirect) |
+| --------- | ------- | --------------- |
+| Anonymous | 10/min  | 100/min         |
+| Free      | 30/min  | 1,000/min       |
+| Pro       | 300/min | 10,000/min      |
 
 ### Redirect status code — 302, not 301
+
 301 (permanent) gets cached by browsers/CDNs — you lose the ability to track
 clicks or change the destination later. 302 keeps it live.
 
 ### Auth — Supabase, verified via JWKS, not a shared secret
+
 Supabase has moved to asymmetric JWT signing keys (ECC), retiring the old
 shared-secret HS256 approach. The backend verifies tokens against Supabase's
 public JWKS endpoint (`/auth/v1/.well-known/jwks.json`) instead of holding a
@@ -110,6 +116,7 @@ across key rotations.
 ## Tech stack
 
 **Backend**
+
 - Runtime: Bun · Framework: Express
 - Cache / rate limiter: Redis (ioredis)
 - Database: MongoDB (dev) → DynamoDB (production target)
@@ -118,6 +125,7 @@ across key rotations.
 - Reverse proxy / LB: Nginx
 
 **Frontend**
+
 - Framework: Next.js (App Router, TypeScript)
 - Styling: Tailwind CSS
 - Auth: Supabase (`@supabase/ssr`) — email/password, session cookies
@@ -192,6 +200,7 @@ GET    /health                   health check
 ## Running locally
 
 **Backend + Redis + Mongo (via Docker):**
+
 ```bash
 cd apps/backend
 cp .env.example .env      # fill in SUPABASE_URL, MONGO_URL
@@ -200,6 +209,7 @@ docker compose up --build
 ```
 
 **Frontend:**
+
 ```bash
 cd apps/frontend
 cp .env.example .env.local   # fill in Supabase URL/key, NEXT_PUBLIC_API_URL
@@ -219,23 +229,23 @@ curl -X POST localhost:4000/api/v1/urls \
 
 **Backend**
 
-| Variable | Purpose |
-|---|---|
-| `PORT` | App server port |
-| `WORKER_ID` | Snowflake worker id (0-1023), must be unique per instance |
-| `BASE_URL` | Used to build the returned `shortUrl` |
-| `REDIS_URL` | Redis connection string |
-| `MONGO_URL` / `MONGO_DB_NAME` | Mongo connection |
-| `SUPABASE_URL` | Used to fetch Supabase's JWKS for token verification |
-| `RATE_LIMIT_*` | Per-tier, per-bucket token bucket capacity |
+| Variable                      | Purpose                                                   |
+| ----------------------------- | --------------------------------------------------------- |
+| `PORT`                        | App server port                                           |
+| `WORKER_ID`                   | Snowflake worker id (0-1023), must be unique per instance |
+| `BASE_URL`                    | Used to build the returned `shortUrl`                     |
+| `REDIS_URL`                   | Redis connection string                                   |
+| `MONGO_URL` / `MONGO_DB_NAME` | Mongo connection                                          |
+| `SUPABASE_URL`                | Used to fetch Supabase's JWKS for token verification      |
+| `RATE_LIMIT_*`                | Per-tier, per-bucket token bucket capacity                |
 
 **Frontend**
 
-| Variable | Purpose |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| Variable                        | Purpose                  |
+| ------------------------------- | ------------------------ |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL     |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase publishable key |
-| `NEXT_PUBLIC_API_URL` | Backend base URL |
+| `NEXT_PUBLIC_API_URL`           | Backend base URL         |
 
 `.env` / `.env.local` are for **local development only** — real secrets are
 gitignored and never committed. In production, values are injected by the

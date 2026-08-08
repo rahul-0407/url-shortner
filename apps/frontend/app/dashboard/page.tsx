@@ -107,10 +107,13 @@ export default function DashboardPage() {
   const filteredUrls = urls.filter(
     (u) =>
       u.shortCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.longUrl.toLowerCase().includes(searchTerm.toLowerCase())
+      u.longUrl.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const totalClicks = urls.reduce((acc, curr) => acc + (curr.clickCount ?? curr.clicks ?? 0), 0);
+  const totalClicks = urls.reduce(
+    (acc, curr) => acc + (curr.clickCount ?? curr.clicks ?? 0),
+    0,
+  );
 
   return (
     <div className="flex h-screen overflow-hidden antialiased font-body-md text-body-md bg-[#131314] text-[#e5e2e3]">
@@ -121,8 +124,12 @@ export default function DashboardPage() {
             R
           </div>
           <div>
-            <h2 className="font-h4 text-base font-bold text-[#e5e2e3]">ROMER INFRA</h2>
-            <div className="text-xs text-[#c6c5d8] font-mono opacity-70">v2.4.0-stable</div>
+            <h2 className="font-h4 text-base font-bold text-[#e5e2e3]">
+              ROMER INFRA
+            </h2>
+            <div className="text-xs text-[#c6c5d8] font-mono opacity-70">
+              v2.4.0-stable
+            </div>
           </div>
         </div>
 
@@ -131,32 +138,48 @@ export default function DashboardPage() {
             className="group flex items-center gap-3 px-3 py-2 rounded text-[#50d8e9] bg-[#1c1b1d] border-r-2 border-[#50d8e9]"
             href="/dashboard"
           >
-            <span className="material-symbols-outlined text-[18px]">terminal</span>
-            <span className="text-xs uppercase tracking-widest font-semibold">My Links</span>
+            <span className="material-symbols-outlined text-[18px]">
+              terminal
+            </span>
+            <span className="text-xs uppercase tracking-widest font-semibold">
+              My Links
+            </span>
           </Link>
 
           <Link
             className="group flex items-center gap-3 px-3 py-2 rounded text-[#c6c5d8] hover:text-[#e5e2e3] hover:bg-[#353436] transition-all"
             href="/dashboard/stats"
           >
-            <span className="material-symbols-outlined text-[18px]">analytics</span>
-            <span className="text-xs uppercase tracking-widest font-semibold">Analytics & Stats</span>
+            <span className="material-symbols-outlined text-[18px]">
+              analytics
+            </span>
+            <span className="text-xs uppercase tracking-widest font-semibold">
+              Analytics & Stats
+            </span>
           </Link>
 
           <Link
             className="group flex items-center gap-3 px-3 py-2 rounded text-[#c6c5d8] hover:text-[#e5e2e3] hover:bg-[#353436] transition-all"
             href="/services"
           >
-            <span className="material-symbols-outlined text-[18px]">sensors</span>
-            <span className="text-xs uppercase tracking-widest font-semibold">Services</span>
+            <span className="material-symbols-outlined text-[18px]">
+              sensors
+            </span>
+            <span className="text-xs uppercase tracking-widest font-semibold">
+              Services
+            </span>
           </Link>
 
           <Link
             className="group flex items-center gap-3 px-3 py-2 rounded text-[#c6c5d8] hover:text-[#e5e2e3] hover:bg-[#353436] transition-all"
             href="/contact"
           >
-            <span className="material-symbols-outlined text-[18px]">contact_support</span>
-            <span className="text-xs uppercase tracking-widest font-semibold">Support</span>
+            <span className="material-symbols-outlined text-[18px]">
+              contact_support
+            </span>
+            <span className="text-xs uppercase tracking-widest font-semibold">
+              Support
+            </span>
           </Link>
         </div>
 
@@ -176,8 +199,12 @@ export default function DashboardPage() {
             onClick={handleSignOut}
             className="group flex items-center gap-3 px-3 py-2 rounded text-red-400 hover:text-red-300 hover:bg-[#353436] transition-all w-full text-left"
           >
-            <span className="material-symbols-outlined text-[18px]">logout</span>
-            <span className="text-xs uppercase tracking-widest font-semibold">Log out</span>
+            <span className="material-symbols-outlined text-[18px]">
+              logout
+            </span>
+            <span className="text-xs uppercase tracking-widest font-semibold">
+              Log out
+            </span>
           </button>
         </div>
       </nav>
@@ -187,7 +214,9 @@ export default function DashboardPage() {
         {/* Page Header */}
         <div className="px-6 py-6 border-b border-[#1B1C1E] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 bg-[#0e0e0f]">
           <div>
-            <h1 className="text-2xl font-bold text-[#e5e2e3] mb-1">URL Infrastructure & Telemetry</h1>
+            <h1 className="text-2xl font-bold text-[#e5e2e3] mb-1">
+              URL Infrastructure & Telemetry
+            </h1>
             <p className="text-[#c6c5d8] font-mono text-xs opacity-80">
               High-performance link shortening, Redis caching & click tracking
             </p>
@@ -196,21 +225,27 @@ export default function DashboardPage() {
           {/* Summary Metrics */}
           <div className="flex gap-4 bg-[#101112] border border-[#232426] rounded p-2">
             <div className="px-4 py-1 border-r border-[#1B1C1E]">
-              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">Total Links</div>
+              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">
+                Total Links
+              </div>
               <div className="text-xl font-bold text-[#e5e2e3] flex items-center gap-2">
                 <span className="status-dot status-amber"></span> {urls.length}
               </div>
             </div>
 
             <div className="px-4 py-1 border-r border-[#1B1C1E]">
-              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">Total Clicks</div>
+              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">
+                Total Clicks
+              </div>
               <div className="text-xl font-bold text-[#e5e2e3] flex items-center gap-2">
                 <span className="status-dot status-green"></span> {totalClicks}
               </div>
             </div>
 
             <div className="px-4 py-1">
-              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">Cache Status</div>
+              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">
+                Cache Status
+              </div>
               <div className="text-xl font-bold text-[#50d8e9] flex items-center gap-2">
                 <span className="status-dot status-green"></span> Active
               </div>
@@ -225,7 +260,9 @@ export default function DashboardPage() {
             {/* Create Short URL Form */}
             <div className="bg-[#101112] border border-[#232426] rounded p-5">
               <h2 className="text-sm uppercase tracking-wider font-semibold text-[#9A9DA3] mb-3 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">link</span>
+                <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">
+                  link
+                </span>
                 Create New Short URL
               </h2>
               <form onSubmit={handleCreate} className="flex gap-3">
@@ -247,7 +284,9 @@ export default function DashboardPage() {
                 </button>
               </form>
 
-              {error && <p className="text-xs text-red-400 mt-2 font-mono">{error}</p>}
+              {error && (
+                <p className="text-xs text-red-400 mt-2 font-mono">{error}</p>
+              )}
             </div>
 
             {/* Table Controls */}
@@ -271,7 +310,10 @@ export default function DashboardPage() {
                 onClick={loadUrls}
                 className="bg-[#101112] border border-[#1B1C1E] rounded px-3 py-1.5 text-xs text-[#e5e2e3] hover:bg-[#151617] flex items-center gap-2 transition-colors"
               >
-                <span className="material-symbols-outlined text-[16px]">refresh</span> Refresh List
+                <span className="material-symbols-outlined text-[16px]">
+                  refresh
+                </span>{" "}
+                Refresh List
               </button>
             </div>
 
@@ -298,42 +340,60 @@ export default function DashboardPage() {
                 <tbody className="font-mono text-xs">
                   {loading ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-[#c6c5d8]">
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-[#c6c5d8]"
+                      >
                         Loading links telemetry...
                       </td>
                     </tr>
                   ) : filteredUrls.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-[#c6c5d8]">
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-[#c6c5d8]"
+                      >
                         No shortened URLs found. Create one above!
                       </td>
                     </tr>
                   ) : (
                     filteredUrls.map((item) => {
-                      const isSelected = selectedUrl?.shortCode === item.shortCode;
+                      const isSelected =
+                        selectedUrl?.shortCode === item.shortCode;
                       return (
                         <tr
                           key={item.shortCode}
                           onClick={() => setSelectedUrl(item)}
                           className={`border-b border-[#1B1C1E] hover:bg-[#151617] cursor-pointer transition-colors h-[44px] ${
-                            isSelected ? "bg-[#151617] border-l-2 border-l-[#5E6BFF]" : ""
+                            isSelected
+                              ? "bg-[#151617] border-l-2 border-l-[#5E6BFF]"
+                              : ""
                           }`}
                         >
                           <td className="py-2 px-3 text-center">
                             <span className="status-dot status-green"></span>
                           </td>
-                          <td className="py-2 px-3 text-[#50d8e9] font-bold">/{item.shortCode}</td>
-                          <td className="py-2 px-3 text-[#c6c5d8] max-w-md truncate">{item.longUrl}</td>
+                          <td className="py-2 px-3 text-[#50d8e9] font-bold">
+                            /{item.shortCode}
+                          </td>
+                          <td className="py-2 px-3 text-[#c6c5d8] max-w-md truncate">
+                            {item.longUrl}
+                          </td>
                           <td className="py-2 px-3 text-[#e5e2e3]">
                             {item.clickCount ?? item.clicks ?? 0}
                           </td>
                           <td className="py-2 px-3 text-right">
-                            <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                            <div
+                              className="flex justify-end gap-2"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <button
                                 onClick={() => handleCopy(item.shortCode)}
                                 className="px-2 py-1 bg-[#191A1C] hover:bg-[#25272a] border border-[#232426] rounded text-[10px] text-[#e5e2e3] font-sans"
                               >
-                                {copiedCode === item.shortCode ? "Copied!" : "Copy"}
+                                {copiedCode === item.shortCode
+                                  ? "Copied!"
+                                  : "Copy"}
                               </button>
                               <button
                                 onClick={() => handleDelete(item.shortCode)}
@@ -361,7 +421,9 @@ export default function DashboardPage() {
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-2">
                       <span className="status-dot status-amber"></span>
-                      <span className="text-xs font-mono text-[#c6c5d8]">/{selectedUrl.shortCode}</span>
+                      <span className="text-xs font-mono text-[#c6c5d8]">
+                        /{selectedUrl.shortCode}
+                      </span>
                     </div>
                     <a
                       href={`http://localhost:4000/${selectedUrl.shortCode}`}
@@ -369,7 +431,9 @@ export default function DashboardPage() {
                       rel="noreferrer"
                       className="text-[#c6c5d8] hover:text-white transition-colors"
                     >
-                      <span className="material-symbols-outlined text-[18px]">open_in_new</span>
+                      <span className="material-symbols-outlined text-[18px]">
+                        open_in_new
+                      </span>
                     </a>
                   </div>
                   <h3 className="text-lg font-bold text-[#e5e2e3] mb-1">
@@ -385,26 +449,43 @@ export default function DashboardPage() {
                   {/* Context Section */}
                   <section>
                     <h4 className="text-xs font-semibold text-[#c6c5d8] uppercase tracking-widest mb-3 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px]">info</span> Telemetry Specs
+                      <span className="material-symbols-outlined text-[14px]">
+                        info
+                      </span>{" "}
+                      Telemetry Specs
                     </h4>
                     <div className="bg-[#151617] border border-[#1B1C1E] rounded p-3 grid grid-cols-2 gap-y-3 gap-x-4">
                       <div>
-                        <div className="text-[10px] text-[#454655] uppercase mb-1">Short Code</div>
-                        <div className="text-xs text-[#e5e2e3] font-mono">{selectedUrl.shortCode}</div>
+                        <div className="text-[10px] text-[#454655] uppercase mb-1">
+                          Short Code
+                        </div>
+                        <div className="text-xs text-[#e5e2e3] font-mono">
+                          {selectedUrl.shortCode}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#454655] uppercase mb-1">Total Clicks</div>
+                        <div className="text-[10px] text-[#454655] uppercase mb-1">
+                          Total Clicks
+                        </div>
                         <div className="text-xs text-[#50d8e9] font-mono font-bold">
                           {selectedUrl.clickCount ?? selectedUrl.clicks ?? 0}
                         </div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#454655] uppercase mb-1">Cache Layer</div>
-                        <div className="text-xs text-[#50d8e9] font-mono">Redis L1</div>
+                        <div className="text-[10px] text-[#454655] uppercase mb-1">
+                          Cache Layer
+                        </div>
+                        <div className="text-xs text-[#50d8e9] font-mono">
+                          Redis L1
+                        </div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#454655] uppercase mb-1">Storage</div>
-                        <div className="text-xs text-[#e5e2e3] font-mono">MongoDB</div>
+                        <div className="text-[10px] text-[#454655] uppercase mb-1">
+                          Storage
+                        </div>
+                        <div className="text-xs text-[#e5e2e3] font-mono">
+                          MongoDB
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -412,7 +493,10 @@ export default function DashboardPage() {
                   {/* Quick Actions */}
                   <section>
                     <h4 className="text-xs font-semibold text-[#c6c5d8] uppercase tracking-widest mb-3 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px]">bolt</span> Link Actions
+                      <span className="material-symbols-outlined text-[14px]">
+                        bolt
+                      </span>{" "}
+                      Link Actions
                     </h4>
                     <div className="flex flex-col gap-2">
                       <button
@@ -420,11 +504,17 @@ export default function DashboardPage() {
                         className="bg-[#151617] border border-[#1B1C1E] rounded p-3 text-left hover:border-[#454655] transition-colors flex items-center justify-between"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">content_copy</span>
-                          <span className="text-xs text-[#e5e2e3]">Copy Short URL</span>
+                          <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">
+                            content_copy
+                          </span>
+                          <span className="text-xs text-[#e5e2e3]">
+                            Copy Short URL
+                          </span>
                         </div>
                         <span className="text-[10px] text-[#c6c5d8] font-mono">
-                          {copiedCode === selectedUrl.shortCode ? "COPIED" : "COPY"}
+                          {copiedCode === selectedUrl.shortCode
+                            ? "COPIED"
+                            : "COPY"}
                         </span>
                       </button>
 
@@ -433,10 +523,16 @@ export default function DashboardPage() {
                         className="bg-[#151617] border border-[#1B1C1E] rounded p-3 text-left hover:border-[#454655] transition-colors flex items-center justify-between"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-[16px] text-[#50d8e9]">bar_chart</span>
-                          <span className="text-xs text-[#e5e2e3]">View Detailed Analytics</span>
+                          <span className="material-symbols-outlined text-[16px] text-[#50d8e9]">
+                            bar_chart
+                          </span>
+                          <span className="text-xs text-[#e5e2e3]">
+                            View Detailed Analytics
+                          </span>
                         </div>
-                        <span className="text-[10px] text-[#c6c5d8] font-mono">OPEN</span>
+                        <span className="text-[10px] text-[#c6c5d8] font-mono">
+                          OPEN
+                        </span>
                       </Link>
                     </div>
                   </section>
@@ -448,12 +544,17 @@ export default function DashboardPage() {
                     onClick={() => handleDelete(selectedUrl.shortCode)}
                     className="w-full bg-red-950/50 border border-red-800/50 text-red-400 rounded py-2 text-xs font-semibold hover:bg-red-900/60 transition-colors flex justify-center items-center gap-2"
                   >
-                    <span className="material-symbols-outlined text-[16px]">delete</span> Delete Link
+                    <span className="material-symbols-outlined text-[16px]">
+                      delete
+                    </span>{" "}
+                    Delete Link
                   </button>
                 </div>
               </>
             ) : (
-              <div className="p-8 text-center text-[#c6c5d8] text-xs">Select a link from the table to view details</div>
+              <div className="p-8 text-center text-[#c6c5d8] text-xs">
+                Select a link from the table to view details
+              </div>
             )}
           </div>
         </div>

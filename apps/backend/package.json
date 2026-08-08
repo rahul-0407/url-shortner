@@ -15,7 +15,7 @@
     "express": "^5.2.1",
     "ioredis": "^5.4.1",
     "jose": "^6.2.8",
-    "mongodb": "^6.9.0"
+    "mongodb": "^7.5.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

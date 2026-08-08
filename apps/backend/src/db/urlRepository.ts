@@ -24,8 +24,3 @@ export async function deleteByCode(shortCode: string,  userId: string): Promise<
 export async function incrementClicks(shortCode: string, by = 1): Promise<void> {
   await getDb().collection<UrlRecord>(COLLECTION).updateOne({shortCode}, {$inc: {clickCount: by}});
 }
-
-
-
-
-
