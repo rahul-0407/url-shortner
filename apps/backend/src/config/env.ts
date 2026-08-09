@@ -46,6 +46,8 @@ export const env = {
   clickhouseUsername: optional("CLICKHOUSE_USERNAME", "default"),
   clickhousePassword: optional("CLICKHOUSE_PASSWORD", ""),
   clickhouseDatabase: optional("CLICKHOUSE_DATABASE", "default"),
+
+  adminSecret: optional("ADMIN_SECRET", "admin-secret-key"),
 } as const;
 
 if (env.workerId < 0 || env.workerId > 1023) {

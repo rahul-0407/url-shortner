@@ -5,6 +5,7 @@ import { connectDb } from "./db/client";
 import { attachAuth } from "./middleware/auth";
 import urlsRoutes from "./routes/urls.routes";
 import redirectRoutes from "./routes/redirect.routes";
+import adminAnalyticsRoutes from "./routes/adminAnalytics.routes";
 
 await connectDb();
 
@@ -27,7 +28,7 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-secret"],
   })
 );
 
@@ -37,6 +38,9 @@ app.use(attachAuth);
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
+
+app.use("/api/admin/analytics", adminAnalyticsRoutes);
+app.use("/api/v1/admin/analytics", adminAnalyticsRoutes);
 
 app.use("/api/v1", urlsRoutes);
 app.use("/", redirectRoutes);

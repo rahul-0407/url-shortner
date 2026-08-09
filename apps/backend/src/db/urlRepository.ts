@@ -132,3 +132,47 @@ export async function deleteByCode(shortCode: string, userId: string): Promise<b
     return (count ?? 0) > 0;
   }
 }
+
+export async function getTotalUrlsCount(): Promise<number> {
+  const mode = getDbMode();
+  if (mode === "pg") {
+    const pool = getPool();
+    const res = await pool.query(`SELECT count(*) AS total FROM urls`);
+    return Number(res.rows[0]?.total ?? 0);
+  } else {
+    const supabase = getSupabase();
+    const { count, error } = await supabase.from("urls").select("*", { count: "exact", head: true });
+    if (error) return 0;
+    return count ?? 0;
+  }
+}
+
+export async function findByCodesBatch(codes: string[]): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  if (codes.length === 0) return map;
+
+  const mode = getDbMode();
+  if (mode === "pg") {
+    const pool = getPool();
+    const res = await pool.query(
+      `SELECT short_code, long_url FROM urls WHERE short_code = ANY($1::text[])`,
+      [codes]
+    );
+    for (const row of res.rows) {
+      map.set(row.short_code, row.long_url);
+    }
+  } else {
+    const supabase = getSupabase();
+    const { data } = await supabase
+      .from("urls")
+      .select("short_code, long_url")
+      .in("short_code", codes);
+
+    if (data) {
+      for (const row of data) {
+        map.set(row.short_code, row.long_url);
+      }
+    }
+  }
+  return map;
+}
