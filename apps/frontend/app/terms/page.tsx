@@ -6,7 +6,7 @@ export default function TermsPage() {
     <div className="bg-[#070708] text-[#e5e2e3] font-body-md antialiased selection:bg-[#5E6BFF] selection:text-white min-h-screen">
       <Navbar />
 
-      <main className="max-w-[1000px] mx-auto pt-[120px] pb-20 px-6 sm:px-8 space-y-8">
+      <main className="max-w-250 mx-auto pt-30 pb-20 px-6 sm:px-8 space-y-8">
         <div className="border-b border-[#232426] pb-6 space-y-2">
           <span className="text-xs font-mono text-[#5E6BFF] uppercase tracking-[0.2em]">Legal & Compliance</span>
           <h1 className="text-4xl font-bold text-white">Terms of Service & Acceptable Use</h1>

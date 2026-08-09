@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
-import { createClient } from "@/lib/supabase/client";
 
 interface UrlItem {
   shortCode: string;
@@ -21,7 +19,6 @@ interface StatsDetail {
 }
 
 export default function StatsPage() {
-  const supabase = createClient();
   const [urls, setUrls] = useState<UrlItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,8 +58,7 @@ export default function StatsPage() {
 
   return (
     <div className="flex h-screen overflow-hidden antialiased font-body-md text-body-md bg-[#131314] text-[#e5e2e3]">
-      {/* SideNavBar Component */}
-      <nav className="bg-[#0e0e0f] border-r border-[#454655]/40 flex flex-col h-full fixed left-0 top-0 z-40 w-64 pt-4 pb-6 hidden md:flex">
+      <nav className="bg-[#0e0e0f] border-r border-[#454655]/40 flex flex-col h-full fixed left-0 top-0 z-40 w-64 pt-4 pb-6 md:flex">
         <div className="px-4 mb-8 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full border border-[#454655] flex items-center justify-center font-bold text-white bg-[#201f21]">
             R
@@ -108,7 +104,6 @@ export default function StatsPage() {
         </div>
       </nav>
 
-      {/* Main Content Area */}
       <main className="flex-1 ml-0 md:ml-64 flex flex-col h-full overflow-y-auto bg-[#131314]">
         <div className="p-8 max-w-5xl mx-auto w-full">
           <div className="flex justify-between items-center mb-8">
@@ -124,7 +119,6 @@ export default function StatsPage() {
             </button>
           </div>
 
-          {/* KPI Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-[#101112] border border-[#232426] rounded-lg p-5">
               <span className="text-xs uppercase tracking-widest font-semibold text-[#c6c5d8]">Active Short Codes</span>
@@ -138,7 +132,6 @@ export default function StatsPage() {
 
           {error && <p className="text-red-400 text-xs font-mono mb-4">{error}</p>}
 
-          {/* Performance Table */}
           <div className="bg-[#101112] border border-[#232426] rounded-lg overflow-hidden">
             <div className="p-4 border-b border-[#232426] flex justify-between items-center bg-[#151617]">
               <h2 className="text-sm font-semibold text-[#e5e2e3] uppercase tracking-wider">Per-URL Performance</h2>
@@ -175,7 +168,6 @@ export default function StatsPage() {
             )}
           </div>
 
-          {/* Stats Modal */}
           {selectedStats && (
             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
               <div className="bg-[#101112] border border-[#232426] rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4">

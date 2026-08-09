@@ -32,7 +32,7 @@ function LoginForm() {
     setLoading(true);
 
     const cleanEmail = email.trim();
-    const { error } =
+    const { data: authData, error } =
       mode === "login"
         ? await supabase.auth.signInWithPassword({ email: cleanEmail, password })
         : await supabase.auth.signUp({ email: cleanEmail, password });
@@ -44,7 +44,21 @@ function LoginForm() {
       return;
     }
 
-    router.push("/dashboard");
+    const user = authData?.user;
+    const role =
+      user?.app_metadata?.role ||
+      user?.user_metadata?.role ||
+      user?.role;
+    const isAdmin =
+      role === "admin" ||
+      user?.app_metadata?.is_admin === true ||
+      user?.user_metadata?.is_admin === true;
+
+    if (isAdmin) {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
     router.refresh();
   }
 
@@ -63,16 +77,13 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-[1020px] bg-[#141221] border border-[#27233a] rounded-[24px] p-3 sm:p-4 shadow-2xl grid grid-cols-1 lg:grid-cols-2 gap-4 my-8">
-      {/* Left Visual Banner Section */}
+    <div className="w-full max-w-255 bg-[#141221] border border-[#27233a] rounded-3xl p-3 sm:p-4 shadow-2xl grid grid-cols-1 lg:grid-cols-2 gap-4 my-8">
       <div
-        className="relative rounded-[18px] overflow-hidden min-h-[460px] lg:min-h-[560px] flex flex-col justify-between p-6 sm:p-8 bg-cover bg-center border border-white/10"
+        className="relative rounded-[18px] overflow-hidden min-h-115 lg:min-h-140 flex flex-col justify-between p-6 sm:p-8 bg-cover bg-center border border-white/10"
         style={{ backgroundImage: "url('/login-banner.png')" }}
       >
-        {/* Gradient dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#100d1b] via-[#100d1b]/40 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-[#100d1b] via-[#100d1b]/40 to-transparent pointer-events-none"></div>
 
-        {/* Top Header inside Banner */}
         <div className="relative z-10 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-lg bg-[#5E6BFF] flex items-center justify-center text-white font-bold text-sm shadow-md shadow-[#5E6BFF]/30">
@@ -91,7 +102,6 @@ function LoginForm() {
           </Link>
         </div>
 
-        {/* Bottom Tagline inside Banner */}
         <div className="relative z-10 space-y-3">
           <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight tracking-tight">
             Shorten Links,
@@ -102,7 +112,6 @@ function LoginForm() {
             Create clean short URLs, generate instant QR codes, and monitor detailed click analytics with Romer.
           </p>
 
-          {/* Slider Pagination Dots */}
           <div className="flex items-center gap-1.5 pt-2">
             <div className="w-6 h-1 rounded-full bg-white"></div>
             <div className="w-2 h-1 rounded-full bg-white/40"></div>
@@ -111,7 +120,6 @@ function LoginForm() {
         </div>
       </div>
 
-      {/* Right Form Section */}
       <div className="flex flex-col justify-center px-4 sm:px-8 py-6 lg:py-8 space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -133,7 +141,6 @@ function LoginForm() {
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Email Field */}
           <div className="space-y-1.5">
             <label className="block text-xs font-medium text-[#b5afd0]" htmlFor="email">
               Email
@@ -149,7 +156,6 @@ function LoginForm() {
             />
           </div>
 
-          {/* Password Field with Eye Toggle */}
           <div className="space-y-1.5">
             <label className="block text-xs font-medium text-[#b5afd0]" htmlFor="password">
               Password
@@ -177,7 +183,6 @@ function LoginForm() {
             </div>
           </div>
 
-          {/* Terms Checkbox (Signup mode) */}
           {mode === "signup" && (
             <div className="flex items-center gap-2 pt-1">
               <input
@@ -202,7 +207,6 @@ function LoginForm() {
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -212,7 +216,6 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="relative flex items-center justify-center my-2">
           <div className="border-t border-[#29243d] w-full"></div>
           <span className="bg-[#141221] px-3 text-[11px] text-[#716a8a] font-medium whitespace-nowrap uppercase tracking-wider absolute">
@@ -220,7 +223,6 @@ function LoginForm() {
           </span>
         </div>
 
-        {/* Social Login Buttons */}
         <div className="grid grid-cols-2 gap-3 pt-1">
           <button
             type="button"

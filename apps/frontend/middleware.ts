@@ -28,17 +28,24 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
   const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
 
-  if (isProtectedRoute && !user) {
+  if ((isProtectedRoute || isAdminRoute) && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
   if (isAuthRoute && user) {
+    const role = user.app_metadata?.role || user.user_metadata?.role || user.role;
+    const isAdmin =
+      role === "admin" ||
+      user.app_metadata?.is_admin === true ||
+      user.user_metadata?.is_admin === true;
+
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = isAdmin ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 

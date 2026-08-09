@@ -17,7 +17,6 @@
   }
 }
 
-/* Material Symbols icon support */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -33,7 +32,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Stitch Utility Classes */
 .glass-panel { background: rgba(16, 17, 18, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 .inner-glow { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1); }
 .thin-border { border: 1px solid #232426; }
@@ -49,7 +47,6 @@
 .status-red { background-color: #ffb4ab; box-shadow: 0 0 4px rgba(255, 180, 171, 0.5); }
 .status-green { background-color: #92f1ff; box-shadow: 0 0 4px rgba(146, 241, 255, 0.5); }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #353436; border-radius: 4px; }

@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import Navbar from "@/components/Navbar";
 
 export default function ContactPage() {
@@ -6,7 +7,7 @@ export default function ContactPage() {
     <div className="bg-[#070708] text-[#e5e2e3] font-body-md antialiased selection:bg-[#5E6BFF] selection:text-white min-h-screen">
       <Navbar />
 
-      <main className="max-w-[1400px] mx-auto pt-[120px] pb-20 px-6 sm:px-8">
+      <main className="max-w-350 mx-auto pt-30 pb-20 px-6 sm:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
           <span className="text-xs font-mono text-[#5E6BFF] uppercase tracking-[0.2em] px-3 py-1 bg-[#5E6BFF]/10 rounded-full border border-[#5E6BFF]/20">
             Get In Touch

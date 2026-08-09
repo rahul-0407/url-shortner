@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { isAdminUser } from "@/lib/auth";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
@@ -14,13 +15,11 @@ export default function Navbar() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -37,10 +36,11 @@ export default function Navbar() {
     router.refresh();
   }
 
+  const isAdmin = isAdminUser(user);
+
   return (
-    <header className="bg-[#070708]/90 backdrop-blur-md w-full top-0 h-[80px] border-b border-[#232426] z-50 fixed">
+    <header className="bg-[#070708]/90 backdrop-blur-md w-full top-0 h-20 border-b border-[#232426] z-50 fixed">
       <div className="flex justify-between items-center w-full px-6 md:px-8 max-w-[1728px] mx-auto h-full">
-        {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-full border border-[#9A9DA3]/40 bg-[#0e0e0f] flex items-center justify-center text-[#e5e2e3] font-bold text-lg group-hover:border-[#5E6BFF] transition-colors">
             R
@@ -50,7 +50,6 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Navigation Links */}
         <nav className="hidden md:flex gap-6 h-full items-center">
           <Link
             className={`text-sm transition-colors duration-200 ${
@@ -61,17 +60,16 @@ export default function Navbar() {
             Platform
           </Link>
 
-          {/* Render Dashboard ONLY if user is logged in */}
           {user && (
             <Link
               className={`text-sm transition-colors duration-200 ${
-                pathname.startsWith("/dashboard")
+                pathname.startsWith("/dashboard") || pathname.startsWith("/admin")
                   ? "text-[#bec2ff] font-semibold"
                   : "text-[#c6c5d8] hover:text-[#bec2ff]"
               }`}
-              href="/dashboard"
+              href={isAdmin ? "/admin" : "/dashboard"}
             >
-              Dashboard
+              {isAdmin ? "Admin Console" : "Dashboard"}
             </Link>
           )}
 
@@ -101,17 +99,21 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        {/* Auth CTA Buttons */}
         <div className="flex items-center gap-3">
           {loading ? (
             <div className="w-20 h-9 rounded bg-[#1a1b1d] animate-pulse"></div>
           ) : user ? (
             <>
+              {isAdmin && (
+                <span className="text-[10px] uppercase font-bold tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">
+                  Admin Access
+                </span>
+              )}
               <Link
                 className="text-sm bg-[#1a1b1d] border border-[#232426] text-[#e5e2e3] px-4 py-2 rounded hover:bg-[#232426] hover:text-white transition-colors duration-200 font-medium"
-                href="/dashboard"
+                href={isAdmin ? "/admin" : "/dashboard"}
               >
-                Dashboard
+                {isAdmin ? "Admin Portal" : "Dashboard"}
               </Link>
               <button
                 onClick={handleSignOut}

@@ -4,20 +4,18 @@ import Navbar from "@/components/Navbar";
 export default function HomePage() {
   return (
     <div className="bg-[#070708] text-[#e5e2e3] font-body-md antialiased selection:bg-[#5E6BFF] selection:text-white min-h-screen">
-      {/* Navbar */}
       <Navbar />
 
-      <main className="max-w-[1728px] mx-auto mt-[80px]">
-        {/* Hero Section */}
+      <main className="max-w-[1728px] mx-auto mt-20">
         <section className="px-8 relative pt-24 lg:pt-32 pb-20">
-          <div className="max-w-[1516px] mx-auto">
+          <div className="max-w-379 mx-auto">
             <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-12 gap-8">
               <div>
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#5E6BFF]/10 border border-[#5E6BFF]/25 text-[#bec2ff] text-xs font-medium mb-6">
                   <span className="w-2 h-2 rounded-full bg-[#50d8e9] animate-pulse"></span>
                   Fast, Intelligent URL Shortener & Analytics
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-[72px] font-bold text-[#e5e2e3] mb-6 max-w-[1000px] leading-[1.1] tracking-[-0.04em]">
+                <h1 className="text-4xl sm:text-5xl lg:text-[72px] font-bold text-[#e5e2e3] mb-6 max-w-250 leading-[1.1] tracking-[-0.04em]">
                   Shorten Links.
                   <br />
                   Track Clicks. Grow Reach.
@@ -54,12 +52,10 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero Dashboard Preview / Analytics Mockup */}
-            <div className="w-full bg-[#050505] rounded-2xl border border-white/[0.08] overflow-hidden flex flex-col lg:flex-row h-auto lg:h-[620px] shadow-2xl relative">
+            <div className="w-full bg-[#050505] rounded-2xl border border-white/8 overflow-hidden flex flex-col lg:flex-row h-auto lg:h-155 shadow-2xl relative">
               <div className="flex w-full h-full flex-col lg:flex-row">
-                {/* Left Panel: Shortener Stats & Metrics */}
-                <div className="w-full lg:w-[300px] border-b lg:border-b-0 lg:border-r border-white/[0.05] flex flex-col bg-[#070708]">
-                  <div className="p-6 border-b border-white/[0.05]">
+                <div className="w-full lg:w-75 border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col bg-[#070708]">
+                  <div className="p-6 border-b border-white/5">
                     <div className="flex items-center gap-3 mb-1">
                       <div className="w-2 h-2 rounded-full bg-[#50d8e9] shadow-[0_0_8px_rgba(80,216,233,0.5)]"></div>
                       <span className="text-[11px] font-mono text-[#e5e2e3] font-bold tracking-widest uppercase">
@@ -72,9 +68,8 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex-1 p-6 flex flex-col gap-8">
-                    {/* Stat Block 1 */}
                     <div>
-                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/[0.05] pb-2">
+                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/5 pb-2">
                         TOTAL SHORT LINKS
                       </span>
                       <div className="flex justify-between items-end mb-1">
@@ -94,9 +89,8 @@ export default function HomePage() {
                       </svg>
                     </div>
 
-                    {/* Stat Block 2 */}
                     <div>
-                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/[0.05] pb-2">
+                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/5 pb-2">
                         TOTAL CLICKS TRACKED
                       </span>
                       <div className="flex justify-between items-end mb-1">
@@ -116,9 +110,8 @@ export default function HomePage() {
                       </svg>
                     </div>
 
-                    {/* Stat Block 3 */}
                     <div>
-                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/[0.05] pb-2">
+                      <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-2 border-b border-white/5 pb-2">
                         AVG REDIRECT SPEED
                       </span>
                       <div className="flex justify-between items-end mb-1">
@@ -131,8 +124,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Center Panel: Real-Time Click Chart */}
-                <div className="flex-1 flex flex-col relative bg-[#050505] min-h-[300px]">
+                <div className="flex-1 flex flex-col relative bg-[#050505] min-h-75">
                   <div
                     className="absolute inset-0"
                     style={{
@@ -141,10 +133,10 @@ export default function HomePage() {
                       backgroundSize: "80px 80px",
                     }}
                   ></div>
-                  <div className="flex justify-between items-center px-8 py-5 border-b border-white/[0.05] z-10 bg-[#050505]/80 backdrop-blur-sm">
+                  <div className="flex justify-between items-center px-8 py-5 border-b border-white/5 z-10 bg-[#050505]/80 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
                       <span className="w-2 h-2 rounded-full bg-[#50d8e9]"></span>
-                      <span className="text-[11px] font-mono text-[#e5e2e3] uppercase tracking-[0.1em] font-semibold">
+                      <span className="text-[11px] font-mono text-[#e5e2e3] uppercase tracking-widest font-semibold">
                         REAL-TIME CLICK ANALYTICS // PAST 24 HOURS
                       </span>
                     </div>
@@ -155,16 +147,15 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Main Chart SVG */}
                   <div className="flex-1 relative p-8 z-10 flex flex-col justify-end pb-14">
                     <div className="absolute inset-0 px-8 py-12 flex flex-col justify-between pointer-events-none">
-                      <div className="border-t border-white/[0.03] w-full relative">
+                      <div className="border-t border-white/3 w-full relative">
                         <span className="absolute -top-3 -left-2 text-[9px] font-mono text-[#9A9DA3]">100K Clicks</span>
                       </div>
-                      <div className="border-t border-white/[0.03] w-full relative">
+                      <div className="border-t border-white/3 w-full relative">
                         <span className="absolute -top-3 -left-2 text-[9px] font-mono text-[#9A9DA3]">50K Clicks</span>
                       </div>
-                      <div className="border-t border-white/[0.03] w-full relative">
+                      <div className="border-t border-white/3 w-full relative">
                         <span className="absolute -top-3 -left-2 text-[9px] font-mono text-[#9A9DA3]">0 Clicks</span>
                       </div>
                     </div>
@@ -217,28 +208,27 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Right Panel: Live Activity Stream */}
-                <div className="w-full lg:w-[320px] border-t lg:border-t-0 lg:border-l border-white/[0.05] flex flex-col bg-[#070708]">
-                  <div className="p-6 border-b border-white/[0.05]">
+                <div className="w-full lg:w-[320px] border-t lg:border-t-0 lg:border-l border-white/5 flex flex-col bg-[#070708]">
+                  <div className="p-6 border-b border-white/5">
                     <span className="text-[10px] font-mono text-[#9A9DA3] uppercase tracking-[0.15em] block mb-4">
                       SYSTEM MODULE STATUS
                     </span>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-2.5 border border-white/[0.05] bg-[#0a0a0b] rounded-lg">
+                      <div className="flex justify-between items-center p-2.5 border border-white/5 bg-[#0a0a0b] rounded-lg">
                         <div className="flex items-center gap-2.5">
                           <div className="w-2 h-2 rounded-full bg-[#50d8e9]"></div>
                           <span className="text-[11px] font-mono text-white">URL SHORTENER</span>
                         </div>
                         <span className="text-[10px] font-mono text-[#50d8e9]">OK // 100%</span>
                       </div>
-                      <div className="flex justify-between items-center p-2.5 border border-white/[0.05] bg-[#0a0a0b] rounded-lg">
+                      <div className="flex justify-between items-center p-2.5 border border-white/5 bg-[#0a0a0b] rounded-lg">
                         <div className="flex items-center gap-2.5">
                           <div className="w-2 h-2 rounded-full bg-[#5E6BFF]"></div>
                           <span className="text-[11px] font-mono text-white">CLICK TRACKER</span>
                         </div>
                         <span className="text-[10px] font-mono text-[#5E6BFF]">ACTIVE</span>
                       </div>
-                      <div className="flex justify-between items-center p-2.5 border border-white/[0.05] bg-[#0a0a0b] rounded-lg">
+                      <div className="flex justify-between items-center p-2.5 border border-white/5 bg-[#0a0a0b] rounded-lg">
                         <div className="flex items-center gap-2.5">
                           <div className="w-2 h-2 rounded-full bg-[#50d8e9]"></div>
                           <span className="text-[11px] font-mono text-white">QR GENERATOR</span>
@@ -258,7 +248,7 @@ export default function HomePage() {
                       </span>
                     </div>
                     <div className="space-y-4">
-                      <div className="p-3 rounded-lg border border-white/[0.05] bg-[#0c0c0e] space-y-1">
+                      <div className="p-3 rounded-lg border border-white/5 bg-[#0c0c0e] space-y-1">
                         <div className="flex justify-between items-center text-[10px] font-mono text-[#9A9DA3]">
                           <span>08:42:11 AM</span>
                           <span className="text-[#50d8e9]">DIRECT CLICK</span>
@@ -266,7 +256,7 @@ export default function HomePage() {
                         <p className="text-xs font-mono text-white font-medium">romer.app/summer-sale</p>
                       </div>
 
-                      <div className="p-3 rounded-lg border border-white/[0.05] bg-[#0c0c0e] space-y-1">
+                      <div className="p-3 rounded-lg border border-white/5 bg-[#0c0c0e] space-y-1">
                         <div className="flex justify-between items-center text-[10px] font-mono text-[#9A9DA3]">
                           <span>08:41:05 AM</span>
                           <span className="text-[#5E6BFF]">QR SCAN</span>
@@ -281,9 +271,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Feature Grid / Core Benefits */}
         <section className="px-8 border-t border-[#232426] relative pt-24 pb-24">
-          <div className="max-w-[1516px] w-full mx-auto">
+          <div className="max-w-379 w-full mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-20 space-y-3">
               <span className="text-xs font-mono text-[#5E6BFF] uppercase tracking-[0.2em] px-3.5 py-1 bg-[#5E6BFF]/10 rounded-full border border-[#5E6BFF]/20">
                 Core URL Shortener Features
@@ -297,7 +286,6 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Feature 1 */}
               <div className="border border-[#232426] rounded-2xl p-8 bg-[#0c0c0e] relative flex flex-col justify-between hover:border-[#5E6BFF]/50 transition-all duration-300 group">
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-[#17171a] border border-[#232426] flex items-center justify-center mb-6 text-[#5E6BFF] group-hover:scale-110 transition-transform">
@@ -318,7 +306,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Feature 2 */}
               <div className="border border-[#232426] rounded-2xl p-8 bg-[#0c0c0e] relative flex flex-col justify-between hover:border-[#50d8e9]/50 transition-all duration-300 group">
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-[#17171a] border border-[#232426] flex items-center justify-center mb-6 text-[#50d8e9] group-hover:scale-110 transition-transform">
@@ -339,7 +326,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Feature 3 */}
               <div className="border border-[#232426] rounded-2xl p-8 bg-[#0c0c0e] relative flex flex-col justify-between hover:border-[#E5FD17]/50 transition-all duration-300 group">
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-[#17171a] border border-[#232426] flex items-center justify-center mb-6 text-[#E5FD17] group-hover:scale-110 transition-transform">
@@ -363,10 +349,9 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Customer Quotes */}
         <section className="px-8 border-t border-[#232426] flex items-center bg-[#050505] py-24">
-          <div className="max-w-[1516px] w-full mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
-            <div className="lg:col-span-3 bg-[#D1EBEB] rounded-2xl p-10 flex flex-col justify-between h-[360px]">
+          <div className="max-w-379 w-full mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-3 bg-[#D1EBEB] rounded-2xl p-10 flex flex-col justify-between h-90">
               <p className="text-2xl lg:text-3xl text-black font-bold leading-tight max-w-2xl">
                 "Romer makes link sharing so simple. The real-time click tracking gives our marketing team exact insights on what content converts best."
               </p>
@@ -376,7 +361,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-2 bg-[#C4FF44] rounded-2xl p-10 flex flex-col justify-between h-[360px]">
+            <div className="lg:col-span-2 bg-[#C4FF44] rounded-2xl p-10 flex flex-col justify-between h-90">
               <p className="text-xl lg:text-2xl text-black font-bold leading-tight">
                 "The fastest URL shortener we've used. Custom aliases, QR codes, and sub-millisecond redirects out of the box."
               </p>
@@ -388,7 +373,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Final Call To Action */}
         <section className="px-8 border-t border-[#232426] flex flex-col justify-center items-center text-center py-28 bg-[#070708]">
           <div className="max-w-2xl space-y-6">
             <h2 className="text-4xl lg:text-5xl font-bold text-[#e5e2e3] tracking-tight">
