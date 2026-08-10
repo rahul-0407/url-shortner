@@ -1,68 +1,70 @@
 
-const __dirname = "";
-
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
+  const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return response;
+  if (!isProtectedRoute && !isAdminRoute && !isAuthRoute) {
+    return NextResponse.next();
   }
 
-  try {
-    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
-    });
+  const allCookies = request.cookies.getAll();
+  const authCookie = allCookies.find((c) => c.name.includes("auth-token"));
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  let user: any = null;
 
-    const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
-    const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-    const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
+  if (authCookie?.value) {
+    try {
+      const parsed = JSON.parse(authCookie.value);
+      const accessToken = Array.isArray(parsed)
+        ? parsed[0]
+        : parsed?.access_token || parsed;
 
-    if ((isProtectedRoute || isAdminRoute) && !user) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
+      if (accessToken && typeof accessToken === "string") {
+        const supabaseUrl =
+          process.env.NEXT_PUBLIC_SUPABASE_URL ||
+          "https://cgzfvvwtmltwstvpmzzy.supabase.co";
+        const supabaseAnonKey =
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+        const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            apikey: supabaseAnonKey,
+          },
+        });
+
+        if (res.ok) {
+          user = await res.json();
+        }
+      }
+    } catch {
+      // Ignore cookie parse errors safely
     }
-
-    if (isAuthRoute && user) {
-      const role =
-        user.app_metadata?.role || user.user_metadata?.role || user.role;
-      const isAdmin =
-        role === "admin" ||
-        user.app_metadata?.is_admin === true ||
-        user.user_metadata?.is_admin === true;
-
-      const url = request.nextUrl.clone();
-      url.pathname = isAdmin ? "/admin" : "/dashboard";
-      return NextResponse.redirect(url);
-    }
-  } catch (err) {
-    console.error("[middleware] Auth check failed:", err);
   }
 
-  return response;
+  if ((isProtectedRoute || isAdminRoute) && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  if (isAuthRoute && user) {
+    const role =
+      user.app_metadata?.role || user.user_metadata?.role || user.role;
+    const isAdmin =
+      role === "admin" ||
+      user.app_metadata?.is_admin === true ||
+      user.user_metadata?.is_admin === true;
+
+    const url = request.nextUrl.clone();
+    url.pathname = isAdmin ? "/admin" : "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
