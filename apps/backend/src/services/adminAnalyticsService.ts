@@ -78,7 +78,7 @@ export async function getUrlAnalytics(shortCode: string): Promise<UrlAnalyticsDt
       format: "JSONEachRow",
     }),
     client.query({
-      query: "SELECT toString(timestamp) AS timestamp, country, device_type AS deviceType, ip_hash AS ipHash FROM raw_clicks WHERE short_code = {shortCode: String} ORDER BY timestamp DESC LIMIT 20",
+      query: "SELECT toString(timestamp) AS formattedTimestamp, country, device_type AS deviceType, ip_hash AS ipHash FROM raw_clicks WHERE short_code = {shortCode: String} ORDER BY timestamp DESC LIMIT 20",
       query_params: queryParams,
       format: "JSONEachRow",
     }),
@@ -90,14 +90,14 @@ export async function getUrlAnalytics(shortCode: string): Promise<UrlAnalyticsDt
     clicksPerDay,
     countryBreakdown,
     deviceBreakdown,
-    recentClicks,
+    recentClicksRows,
   ] = await Promise.all([
     totalClicksRes.json<{ total: string | number }>(),
     uniqueUsersRes.json<{ total: string | number }>(),
     clicksPerDayRes.json<{ date: string; clicks: string | number }>(),
     countryBreakdownRes.json<{ country: string; clicks: string | number }>(),
     deviceBreakdownRes.json<{ deviceType: string; clicks: string | number }>(),
-    recentClicksRes.json<{ timestamp: string; country: string; deviceType: string; ipHash: string }>(),
+    recentClicksRes.json<{ formattedTimestamp: string; country: string; deviceType: string; ipHash: string }>(),
   ]);
 
   return {
@@ -107,7 +107,12 @@ export async function getUrlAnalytics(shortCode: string): Promise<UrlAnalyticsDt
     clicksPerDay: clicksPerDay.map((cpd) => ({ date: cpd.date, clicks: Number(cpd.clicks) })),
     countryBreakdown: countryBreakdown.map((cb) => ({ country: cb.country, clicks: Number(cb.clicks) })),
     deviceBreakdown: deviceBreakdown.map((db) => ({ deviceType: db.deviceType, clicks: Number(db.clicks) })),
-    recentClicks,
+    recentClicks: recentClicksRows.map((rc) => ({
+      timestamp: rc.formattedTimestamp,
+      country: rc.country,
+      deviceType: rc.deviceType,
+      ipHash: rc.ipHash,
+    })),
   };
 }
 
@@ -182,22 +187,28 @@ export async function getRealtimeAnalytics(): Promise<RealtimeAnalyticsDto> {
       format: "JSONEachRow",
     }),
     client.query({
-      query: "SELECT short_code AS shortCode, toString(timestamp) AS timestamp, country, device_type AS deviceType, ip_hash AS ipHash FROM raw_clicks WHERE timestamp >= now() - INTERVAL 5 MINUTE ORDER BY timestamp DESC LIMIT 20",
+      query: "SELECT short_code AS shortCode, toString(timestamp) AS formattedTimestamp, country, device_type AS deviceType, ip_hash AS ipHash FROM raw_clicks WHERE timestamp >= now() - INTERVAL 5 MINUTE ORDER BY timestamp DESC LIMIT 20",
       format: "JSONEachRow",
     }),
   ]);
 
-  const [clicks5mRows, uniqueUsers5mRows, clicksPerMinute, recentClicks] = await Promise.all([
+  const [clicks5mRows, uniqueUsers5mRows, clicksPerMinute, recentClicksRows] = await Promise.all([
     clicks5mRes.json<{ total: string | number }>(),
     uniqueUsers5mRes.json<{ total: string | number }>(),
     clicksPerMinRes.json<{ minute: string; clicks: string | number }>(),
-    recentClicksRes.json<{ shortCode: string; timestamp: string; country: string; deviceType: string; ipHash: string }>(),
+    recentClicksRes.json<{ shortCode: string; formattedTimestamp: string; country: string; deviceType: string; ipHash: string }>(),
   ]);
 
   return {
     clicksLast5Min: Number(clicks5mRows[0]?.total ?? 0),
     uniqueUsersLast5Min: Number(uniqueUsers5mRows[0]?.total ?? 0),
     clicksPerMinute: clicksPerMinute.map((c) => ({ minute: c.minute, clicks: Number(c.clicks) })),
-    recentClicks,
+    recentClicks: recentClicksRows.map((rc) => ({
+      shortCode: rc.shortCode,
+      timestamp: rc.formattedTimestamp,
+      country: rc.country,
+      deviceType: rc.deviceType,
+      ipHash: rc.ipHash,
+    })),
   };
 }

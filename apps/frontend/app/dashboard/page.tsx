@@ -88,7 +88,8 @@ export default function DashboardPage() {
   }
 
   function handleCopy(shortCode: string) {
-    const fullUrl = `http://localhost:4000/${shortCode}`;
+    const domain = process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link";
+    const fullUrl = `${domain}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl);
     setCopiedCode(shortCode);
     setTimeout(() => setCopiedCode(null), 2000);
@@ -379,7 +380,7 @@ export default function DashboardPage() {
                       </span>
                     </div>
                     <a
-                      href={`http://localhost:4000/${selectedUrl.shortCode}`}
+                      href={`${process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link"}/${selectedUrl.shortCode}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-[#c6c5d8] hover:text-white transition-colors"
@@ -390,7 +391,7 @@ export default function DashboardPage() {
                     </a>
                   </div>
                   <h3 className="text-lg font-bold text-[#e5e2e3] mb-1">
-                    http://localhost:4000/{selectedUrl.shortCode}
+                    {process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link"}/{selectedUrl.shortCode}
                   </h3>
                   <div className="text-xs text-[#c6c5d8] font-mono break-all line-clamp-2">
                     {selectedUrl.longUrl}

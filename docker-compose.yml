@@ -11,7 +11,7 @@ services:
     environment:
       - PORT=4000
       - WORKER_ID=1
-      - BASE_URL=http://localhost
+      - BASE_URL=https://localhost:4000
       - REDIS_URL=redis://redis:6379
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - DATABASE_URL=${DATABASE_URL}
@@ -19,6 +19,9 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=clicks
       - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-clickhouse}
+      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-default}
     depends_on:
       redis:
         condition: service_healthy
@@ -44,6 +47,9 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=clicks
       - CLICKHOUSE_HOST=http://clickhouse:8123
+      - CLICKHOUSE_USERNAME=${CLICKHOUSE_USERNAME:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-clickhouse}
+      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-default}
     depends_on:
       kafka:
         condition: service_started
@@ -89,6 +95,10 @@ services:
     ports:
       - "8123:8123"
       - "9000:9000"
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USERNAME:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-clickhouse}
+      - CLICKHOUSE_DEFAULT_EMPTY_PASSWORD_ONLY_FOR_INSECURE_DEV_DEFAULT=1
     ulimits:
       nofile:
         soft: 262144

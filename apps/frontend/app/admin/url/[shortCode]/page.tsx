@@ -76,7 +76,8 @@ export default function AdminSingleUrlAnalyticsPage() {
   }, [shortCode]);
 
   function handleCopy() {
-    const fullUrl = `http://localhost:4000/${shortCode}`;
+    const domain = process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link";
+    const fullUrl = `${domain}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -151,7 +152,7 @@ export default function AdminSingleUrlAnalyticsPage() {
           </button>
 
           <a
-            href={`http://localhost:4000/${shortCode}`}
+            href={`${process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link"}/${shortCode}`}
             target="_blank"
             rel="noreferrer"
             className="bg-[#6B66DA] hover:bg-[#5954c7] text-white text-xs font-medium px-3.5 py-2 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-[#6B66DA]/20"

@@ -15,7 +15,7 @@ const dbUrl = Bun.env.DATABASE_URL ?? Bun.env.POSTGRES_URL ?? Bun.env.SUPABASE_D
 export const env = {
   port: Number(optional("PORT", "4000")),
   workerId: Number(optional("WORKER_ID", "1")),
-  baseUrl: optional("BASE_URL", "http://localhost:4000"),
+  baseUrl: optional("BASE_URL", "https://localhost:4000"),
 
   redisUrl: required("REDIS_URL"),
 
