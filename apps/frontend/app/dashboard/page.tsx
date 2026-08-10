@@ -88,7 +88,9 @@ export default function DashboardPage() {
   }
 
   function handleCopy(shortCode: string) {
-    const domain = process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link";
+    const domain =
+      process.env.NEXT_PUBLIC_SHORT_DOMAIN ||
+      "https://url-shortner-production-4773.up.railway.app";
     const fullUrl = `${domain}/${shortCode}`;
     navigator.clipboard.writeText(fullUrl);
     setCopiedCode(shortCode);
