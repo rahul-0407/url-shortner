@@ -22,7 +22,7 @@ flowchart TD
     Gateway --> App[App servers<br/>Express on Bun — stateless, autoscaled]
 
     App --> Redis[(Upstash / Redis<br/>Cache LRU+TTL + rate limit buckets)]
-    App --> DB[(Database<br/>MongoDB / DynamoDB — sharded on hashed shortCode)]
+    App --> DB[(Database<br/>PostgreSQL / Supabase DB — indexed on short_code)]
     App -->|JWKS verify| Supabase[Supabase Auth<br/>asymmetric JWT signing]
 
     App -->|Event stream| Kafka[Kafka Cluster<br/>Aiven streaming queue]
@@ -69,19 +69,13 @@ See `apps/backend/src/lib/snowflake.ts` / `base62.ts`.
 
 ### Real-Time Telemetry & Analytics — Kafka + ClickHouse
 
-High-volume redirect clicks generate massive event volumes. Instead of hammering transactional databases (MongoDB/DynamoDB) with OLAP aggregation queries:
+High-volume redirect clicks generate massive event volumes. Instead of hammering transactional databases (PostgreSQL/Supabase) with OLAP aggregation queries:
 - **Kafka**: Decouples click event ingestion from redirect response loops.
 - **ClickHouse**: Columnar database storing raw event logs (`raw_clicks`) and materialized daily rollups (`daily_clicks`, `daily_unique_users`) for sub-second analytical dashboard queries.
 
-### Database — sharded on hashed `shortCode`
+### Database — PostgreSQL / Supabase Database
 
-Access pattern is a pure key-value point lookup, read-heavy (100-1000:1
-read:write). Sharding on a **hash** of `shortCode` (not a range key like
-`createdAt`) spreads writes evenly and avoids hot-shard problems. Currently
-implemented on MongoDB (`hashed` shard key) for local dev speed; DynamoDB is
-the recommended production target since it auto-splits hot partitions with
-no manual shard management. Only `db/client.ts` and `db/urlRepository.ts`
-would change to migrate — nothing else in the app touches the DB directly.
+Access pattern is a pure key-value point lookup, read-heavy (100-1000:1 read:write). Implemented on **PostgreSQL / Supabase Database** (`urls` table indexed on `short_code` primary key and `user_id`). Only `db/client.ts` and `db/urlRepository.ts` interact with the relational store — nothing else in the app touches the DB directly.
 
 ### Redis — two jobs, one instance
 
@@ -118,7 +112,7 @@ The administration and analytics platform adheres to the **MaterialM Design Syst
 - Runtime: Bun / Node.js · Framework: Express
 - Cache / rate limiter: Redis (Upstash / ioredis)
 - Telemetry & Event Streaming: Kafka (Aiven) + ClickHouse
-- Database: MongoDB (dev) → DynamoDB (production target)
+- Database: PostgreSQL / Supabase Database
 - Auth verification: `jose` (JWKS, asymmetric)
 - Containerization: Docker + docker-compose
 - Reverse proxy / LB: Nginx
