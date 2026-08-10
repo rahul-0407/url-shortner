@@ -7,25 +7,9 @@ let isConnecting = false;
 
 function getSslConfig() {
   if (!env.kafkaSsl) return undefined;
-
-  const sslOptions: any = {
+  return {
     rejectUnauthorized: false,
   };
-
-  if (
-    env.kafkaCaCert &&
-    env.kafkaCaCert.trim().length > 20 &&
-    env.kafkaCaCert.includes("BEGIN CERTIFICATE")
-  ) {
-    sslOptions.ca = [env.kafkaCaCert.replace(/\\n/g, "\n").trim()];
-  }
-
-  if (env.kafkaClientKey && env.kafkaClientCert) {
-    sslOptions.key = env.kafkaClientKey.replace(/\\n/g, "\n").trim();
-    sslOptions.cert = env.kafkaClientCert.replace(/\\n/g, "\n").trim();
-  }
-
-  return sslOptions;
 }
 
 const kafka = new Kafka({
