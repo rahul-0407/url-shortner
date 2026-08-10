@@ -64,6 +64,11 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   res.status(500).json({ error: "Internal server error" });
 });
 
+import { startProcessor } from "../processor/analyticsProcessor";
+
 app.listen(env.port, () => {
   console.log(`url-shortener listening on :${env.port} (worker ${env.workerId})`);
+  startProcessor().catch((err) => {
+    console.error("[stream-processor] Failed to start analytics stream processor:", err);
+  });
 });

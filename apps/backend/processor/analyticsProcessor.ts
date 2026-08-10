@@ -51,10 +51,9 @@ flushBuffer
   }
 }
 
-async function startProcessor(): Promise<void> {
+export async function startProcessor(): Promise<void> {
   console.log("[stream-processor] Starting Kafka -> ClickHouse analytics stream processor...");
 
-  
   let clickhouseReady = false;
   for (let i = 1; i <= 10; i++) {
     try {
@@ -68,8 +67,8 @@ async function startProcessor(): Promise<void> {
   }
 
   if (!clickhouseReady) {
-    console.error("[stream-processor] Could not connect to ClickHouse. Exiting...");
-    process.exit(1);
+    console.error("[stream-processor] Could not connect to ClickHouse. Skipping stream processor startup...");
+    return;
   }
 
   await consumer.connect();
@@ -101,39 +100,13 @@ async function startProcessor(): Promise<void> {
   console.log(`[stream-processor] Listening to topic '${env.kafkaTopic}'...`);
 }
 
+// Auto-start if executed directly via CLI
+if (import.meta.main || require.main === module) {
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
 
-async function shutdown(): Promise<void> {
-  if (isShuttingDown) return;
-  isShuttingDown = true;
-  console.log("[stream-processor] Shutting down gracefully...");
-
-  if (flushTimer) {
-    clearInterval(flushTimer);
-    flushTimer = null;
-  }
-
-  try {
-    await consumer.disconnect();
-    console.log("[stream-processor] Kafka consumer disconnected.");
-  } catch (err: any) {
-    console.error("[stream-processor] Error disconnecting Kafka consumer:", err.message);
-  }
-
-  try {
-    await flushBuffer();
-    await closeClickHouse();
-    console.log("[stream-processor] ClickHouse client closed.");
-  } catch (err: any) {
-    console.error("[stream-processor] Error flushing final buffer to ClickHouse:", err.message);
-  }
-
-  process.exit(0);
+  startProcessor().catch((err) => {
+    console.error("[stream-processor] Fatal error starting stream processor:", err);
+    process.exit(1);
+  });
 }
-
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
-
-startProcessor().catch((err) => {
-  console.error("[stream-processor] Fatal error starting stream processor:", err);
-  process.exit(1);
-});
