@@ -5,9 +5,30 @@ import type { ClickEvent } from "../types";
 let producer: Producer | null = null;
 let isConnecting = false;
 
+function getSslConfig() {
+  if (!env.kafkaSsl) return undefined;
+  if (env.kafkaCaCert && env.kafkaClientKey && env.kafkaClientCert) {
+    return {
+      rejectUnauthorized: true,
+      ca: [env.kafkaCaCert],
+      key: env.kafkaClientKey,
+      cert: env.kafkaClientCert,
+    };
+  }
+  return true;
+}
+
 const kafka = new Kafka({
   clientId: env.kafkaClientId,
   brokers: env.kafkaBrokers.split(",").map((b) => b.trim()),
+  ssl: getSslConfig(),
+  sasl: env.kafkaSaslUsername
+    ? {
+        mechanism: (env.kafkaSaslMechanism as any) || "scram-sha-512",
+        username: env.kafkaSaslUsername,
+        password: env.kafkaSaslPassword,
+      }
+    : undefined,
   logLevel: logLevel.WARN,
   retry: {
     initialRetryTime: 300,
@@ -33,7 +54,6 @@ async function getProducer(): Promise<Producer | null> {
     isConnecting = false;
   }
 }
-
 
 export function publishClickEvent(event: ClickEvent): void {
   (async () => {

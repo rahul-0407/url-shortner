@@ -41,6 +41,13 @@ export const env = {
   kafkaBrokers: optional("KAFKA_BROKERS", "localhost:9092"),
   kafkaClientId: optional("KAFKA_CLIENT_ID", "url-shortener-backend"),
   kafkaTopic: optional("KAFKA_TOPIC", "clicks"),
+  kafkaSsl: optional("KAFKA_SSL", "false") === "true",
+  kafkaSaslMechanism: optional("KAFKA_SASL_MECHANISM", "scram-sha-512"),
+  kafkaSaslUsername: optional("KAFKA_SASL_USERNAME", ""),
+  kafkaSaslPassword: optional("KAFKA_SASL_PASSWORD", ""),
+  kafkaCaCert: optional("KAFKA_CA_CERT", ""),
+  kafkaClientKey: optional("KAFKA_CLIENT_KEY", ""),
+  kafkaClientCert: optional("KAFKA_CLIENT_CERT", ""),
 
   clickhouseHost: optional("CLICKHOUSE_HOST", "http://localhost:8123"),
   clickhouseUsername: optional("CLICKHOUSE_USERNAME", "default"),

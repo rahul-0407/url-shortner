@@ -9,9 +9,30 @@ const MAX_RETRIES = 3;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function getSslConfig() {
+  if (!env.kafkaSsl) return undefined;
+  if (env.kafkaCaCert && env.kafkaClientKey && env.kafkaClientCert) {
+    return {
+      rejectUnauthorized: true,
+      ca: [env.kafkaCaCert],
+      key: env.kafkaClientKey,
+      cert: env.kafkaClientCert,
+    };
+  }
+  return true;
+}
+
 const kafka = new Kafka({
   clientId: "analytics-stream-processor",
   brokers: env.kafkaBrokers.split(",").map((b) => b.trim()),
+  ssl: getSslConfig(),
+  sasl: env.kafkaSaslUsername
+    ? {
+        mechanism: (env.kafkaSaslMechanism as any) || "scram-sha-512",
+        username: env.kafkaSaslUsername,
+        password: env.kafkaSaslPassword,
+      }
+    : undefined,
   logLevel: logLevel.WARN,
   retry: {
     initialRetryTime: 500,
@@ -32,7 +53,7 @@ async function flushBuffer(): Promise<void> {
 
   const batchToInsert = [...buffer];
   buffer = [];
-flushBuffer
+
   let attempt = 0;
   while (attempt < MAX_RETRIES) {
     try {
@@ -48,6 +69,24 @@ flushBuffer
         console.error(`[stream-processor] FATAL: Dropped ${batchToInsert.length} events after ${MAX_RETRIES} failed attempts.`);
       }
     }
+  }
+}
+
+async function ensureTopicExists(): Promise<void> {
+  const admin = kafka.admin();
+  try {
+    await admin.connect();
+    const topics = await admin.listTopics();
+    if (!topics.includes(env.kafkaTopic)) {
+      await admin.createTopics({
+        topics: [{ topic: env.kafkaTopic, numPartitions: 1, replicationFactor: 1 }],
+      });
+      console.log(`[stream-processor] Created Kafka topic '${env.kafkaTopic}' in Aiven Kafka`);
+    }
+  } catch (err: any) {
+    console.warn(`[stream-processor] Auto topic creation warning: ${err.message}`);
+  } finally {
+    await admin.disconnect().catch(() => {});
   }
 }
 
@@ -71,8 +110,26 @@ export async function startProcessor(): Promise<void> {
     return;
   }
 
-  await consumer.connect();
-  await consumer.subscribe({ topic: env.kafkaTopic, fromBeginning: false });
+  await ensureTopicExists();
+
+  let consumerConnected = false;
+  for (let attempt = 1; attempt <= 10; attempt++) {
+    try {
+      await consumer.connect();
+      await consumer.subscribe({ topic: env.kafkaTopic, fromBeginning: false });
+      consumerConnected = true;
+      console.log(`[stream-processor] Kafka consumer connected and subscribed to '${env.kafkaTopic}' on Aiven Kafka`);
+      break;
+    } catch (err: any) {
+      console.warn(`[stream-processor] Kafka consumer connection attempt ${attempt}/10 failed: ${err.message}. Retrying in 5s...`);
+      await sleep(5000);
+    }
+  }
+
+  if (!consumerConnected) {
+    console.error("[stream-processor] Could not connect Kafka consumer. Stream processor disabled.");
+    return;
+  }
 
   flushTimer = setInterval(() => {
     if (!isShuttingDown && buffer.length > 0) {
@@ -96,42 +153,12 @@ export async function startProcessor(): Promise<void> {
       }
     },
   });
-
-  console.log(`[stream-processor] Listening to topic '${env.kafkaTopic}'...`);
 }
 
-export async function shutdown(): Promise<void> {
-  if (isShuttingDown) return;
+export async function stopProcessor(): Promise<void> {
   isShuttingDown = true;
-  console.log("[stream-processor] Shutting down gracefully...");
-
-  if (flushTimer) {
-    clearInterval(flushTimer);
-    flushTimer = null;
-  }
-
-  try {
-    await consumer.disconnect();
-    console.log("[stream-processor] Kafka consumer disconnected.");
-  } catch (err: any) {
-    console.error("[stream-processor] Error disconnecting Kafka consumer:", err.message);
-  }
-
-  try {
-    await flushBuffer();
-    await closeClickHouse();
-    console.log("[stream-processor] ClickHouse client closed.");
-  } catch (err: any) {
-    console.error("[stream-processor] Error flushing final buffer to ClickHouse:", err.message);
-  }
-}
-
-if (import.meta.main || require.main === module) {
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
-
-  startProcessor().catch((err) => {
-    console.error("[stream-processor] Fatal error starting stream processor:", err);
-    process.exit(1);
-  });
+  if (flushTimer) clearInterval(flushTimer);
+  await flushBuffer();
+  await consumer.disconnect().catch(() => {});
+  await closeClickHouse().catch(() => {});
 }
