@@ -15,11 +15,32 @@ import {
   LogOut,
   ShieldCheck,
   Loader2,
+  Search,
+  Bell,
+  MessageSquare,
+  Moon,
+  Sun,
+  Globe,
+  Settings,
+  Menu,
+  Grid,
+  ShoppingBag,
+  BarChart3,
+  Users,
+  Layers,
+  Home,
+  Info,
+  BookOpen,
+  Mail,
+  Briefcase,
+  DollarSign,
+  ChevronDown
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -47,9 +68,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#090712] text-white flex items-center justify-center flex-col gap-3">
-        <Loader2 className="w-8 h-8 text-[#5E6BFF] animate-spin" />
-        <span className="text-xs text-[#9590a8] font-mono">Verifying ClickHouse Admin Credentials...</span>
+      <div className="min-h-screen bg-[#F4F7FB] text-[#1E293B] flex items-center justify-center flex-col gap-3">
+        <Loader2 className="w-8 h-8 text-[#2563EB] animate-spin" />
+        <span className="text-xs text-[#64748B] font-medium">Loading MaterialM Dashboard...</span>
       </div>
     );
   }
@@ -58,73 +79,129 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <ForbiddenPage />;
   }
 
-  const navItems = [
-    { label: "Overview", href: "/admin", icon: LayoutDashboard },
-    { label: "Top URLs", href: "/admin/top-urls", icon: TrendingUp },
-    { label: "Realtime", href: "/admin/realtime", icon: Activity },
+  const dashboardItems = [
+    { label: "eCommerce", href: "/admin", icon: ShoppingBag },
+    { label: "Analytics", href: "/admin", icon: BarChart3 },
+    { label: "CRM (Top URLs)", href: "/admin/top-urls", icon: Users },
+    { label: "Realtime Stream", href: "/admin/realtime", icon: Activity },
+  ];
+
+  const pageItems = [
+    { label: "Homepage", href: "/", icon: Home },
+    { label: "My Links", href: "/dashboard", icon: Layers },
+    { label: "Services", href: "/services", icon: Info },
+    { label: "Blog", href: "/contact", icon: BookOpen },
+    { label: "Contact Us", href: "/contact", icon: Mail },
+    { label: "Portfolio", href: "/dashboard", icon: Briefcase },
+    { label: "Pricing", href: "/services", icon: DollarSign },
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#090712] text-[#FAFAFA] font-sans">
-      <aside className="w-64 bg-[#100d1b] border-r border-[#231f38] flex flex-col h-full z-40 md:flex">
-        <div className="p-5 border-b border-[#231f38] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#6B66DA] to-[#453fbb] flex items-center justify-center text-white font-bold text-sm shadow-md shadow-[#6B66DA]/30">
-              R
-            </div>
-            <div>
-              <h2 className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
-                Admin Console
-              </h2>
-              <p className="text-[10px] text-[#8e87ff] font-mono">ClickHouse + Kafka</p>
-            </div>
-          </div>
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
+    <div className={`flex h-screen overflow-hidden ${isDarkMode ? "bg-[#0B0F19] text-white" : "bg-[#F4F7FB] text-[#1E293B]"} font-sans`}>
+      {/* Leftmost Mini Icon Sidebar (MaterialM Style) */}
+      <aside className={`w-16 ${isDarkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-slate-200/80"} border-r flex flex-col items-center py-4 z-50 hidden lg:flex shrink-0`}>
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#60A5FA] flex items-center justify-center text-white font-black text-xl shadow-md shadow-blue-500/20 mb-6 cursor-pointer">
+          M
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin"
-                : pathname.startsWith(item.href);
+        <div className="flex-1 flex flex-col gap-4 text-[#64748B]">
+          <button className="p-2.5 rounded-xl bg-blue-50 text-[#2563EB] hover:bg-blue-100 transition-colors">
+            <LayoutDashboard className="w-5 h-5" />
+          </button>
+          <button className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <BarChart3 className="w-5 h-5" />
+          </button>
+          <button className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <Users className="w-5 h-5" />
+          </button>
+          <button className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <Layers className="w-5 h-5" />
+          </button>
+          <button className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <Settings className="w-5 h-5" />
+          </button>
+        </div>
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  isActive
-                    ? "bg-[#6B66DA] text-white shadow-lg shadow-[#6B66DA]/25"
-                    : "text-[#9590a8] hover:text-white hover:bg-[#1a162b]"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="mt-auto">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white">
+            {user?.email?.[0]?.toUpperCase() || "A"}
+          </div>
+        </div>
+      </aside>
 
-        <div className="p-3 border-t border-[#231f38] space-y-2">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-[#9590a8] hover:text-white hover:bg-[#1a162b] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 text-[#8e87ff]" />
-            <span>User Dashboard</span>
-          </Link>
+      {/* Main Drawer Navigation Sidebar */}
+      <aside className={`w-60 ${isDarkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-slate-200/80"} border-r flex flex-col h-full z-40 hidden md:flex shrink-0`}>
+        <div className="p-5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="font-extrabold text-lg tracking-tight text-slate-900">
+              Dashboards
+            </span>
+          </div>
+        </div>
 
-          <div className="p-3 rounded-xl bg-[#141024] border border-[#272140] flex items-center justify-between">
+        <div className="flex-1 overflow-y-auto px-4 space-y-6">
+          <div>
+            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+              Dashboards
+            </div>
+            <nav className="space-y-1">
+              {dashboardItems.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  item.href === "/admin"
+                    ? pathname === "/admin"
+                    : pathname.startsWith(item.href);
+
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      isActive
+                        ? "bg-[#EBF3FE] text-[#2563EB] shadow-xs"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div>
+            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+              Frontend Pages
+            </div>
+            <nav className="space-y-1">
+              {pageItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                  >
+                    <Icon className="w-4 h-4 text-slate-400" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-slate-100">
+          <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between">
             <div className="truncate pr-2">
-              <p className="text-[11px] font-medium text-white truncate">{user?.email}</p>
-              <p className="text-[9px] text-emerald-400 font-mono">● Admin Access</p>
+              <p className="text-xs font-semibold text-slate-900 truncate">{user?.email}</p>
+              <p className="text-[10px] text-emerald-600 font-medium">● Online Admin</p>
             </div>
             <button
               onClick={handleSignOut}
               title="Log out"
-              className="text-[#9590a8] hover:text-red-400 transition-colors p-1"
+              className="text-slate-400 hover:text-red-500 transition-colors p-1"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -132,33 +209,72 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="md:hidden bg-[#100d1b] border-b border-[#231f38] px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#6B66DA] flex items-center justify-center text-white font-bold text-xs">
-              R
+        {/* Top Header Navbar */}
+        <header className={`h-16 ${isDarkMode ? "bg-[#111827] border-[#1F2937]" : "bg-white border-slate-200/80"} border-b px-6 flex items-center justify-between shrink-0 z-30`}>
+          <div className="flex items-center gap-4 flex-1 max-w-md">
+            <button className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100">
+              <Menu className="w-5 h-5" />
+            </button>
+            <button className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100">
+              <Grid className="w-5 h-5" />
+            </button>
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search dashboard or metrics..."
+                className="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-9 pr-4 py-1.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              />
             </div>
-            <span className="font-bold text-sm text-white">Admin Console</span>
           </div>
 
-          <div className="flex items-center gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
-                  pathname === item.href ? "bg-[#6B66DA] text-white" : "text-[#9590a8]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            <button className="text-slate-600 hover:text-slate-900 p-2 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-1">
+              <span className="text-xs font-semibold">🇬🇧</span>
+            </button>
+
+            <button className="relative text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors">
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1 right-1 w-4 h-4 bg-blue-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                3
+              </span>
+            </button>
+
+            <button className="relative text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors">
+              <MessageSquare className="w-4 h-4" />
+              <span className="absolute top-1 right-1 w-4 h-4 bg-pink-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                5
+              </span>
+            </button>
+
+            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-xs">
+                {user?.email?.[0]?.toUpperCase() || "A"}
+              </div>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#090712]">
+        {/* Dynamic Page Children */}
+        <main className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 ${isDarkMode ? "bg-[#0B0F19]" : "bg-[#F4F7FB]"}`}>
           {children}
         </main>
+
+        {/* MaterialM Floating Settings Action Gear Button */}
+        <div className="fixed bottom-6 right-6 z-50">
+          <button className="w-12 h-12 rounded-full bg-[#00A3FF] hover:bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/40 hover:scale-105 transition-all">
+            <Settings className="w-5 h-5 animate-spin-slow" />
+          </button>
+        </div>
       </div>
     </div>
   );

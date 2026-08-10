@@ -64,7 +64,7 @@ export default function ServicesPage() {
         <div className="mt-20 border border-[#232426] bg-[#0f0f12] rounded-2xl p-10 text-center space-y-6">
           <h2 className="text-2xl font-bold text-white">Ready to streamline your links?</h2>
           <p className="text-[#9A9DA3] max-w-xl mx-auto text-sm">
-            Join thousands of teams leveraging Romer's click analytics and URL shortening engine.
+            Join thousands of teams leveraging Romer&apos;s click analytics and URL shortening engine.
           </p>
           <div className="flex justify-center gap-4 pt-2">
             <Link

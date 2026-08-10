@@ -353,7 +353,7 @@ export default function HomePage() {
           <div className="max-w-379 w-full mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6">
             <div className="lg:col-span-3 bg-[#D1EBEB] rounded-2xl p-10 flex flex-col justify-between h-90">
               <p className="text-2xl lg:text-3xl text-black font-bold leading-tight max-w-2xl">
-                "Romer makes link sharing so simple. The real-time click tracking gives our marketing team exact insights on what content converts best."
+                &ldquo;Romer makes link sharing so simple. The real-time click tracking gives our marketing team exact insights on what content converts best.&rdquo;
               </p>
               <div>
                 <div className="font-bold text-black text-lg">Sarah Jenkins</div>
@@ -363,7 +363,7 @@ export default function HomePage() {
 
             <div className="lg:col-span-2 bg-[#C4FF44] rounded-2xl p-10 flex flex-col justify-between h-90">
               <p className="text-xl lg:text-2xl text-black font-bold leading-tight">
-                "The fastest URL shortener we've used. Custom aliases, QR codes, and sub-millisecond redirects out of the box."
+                &ldquo;The fastest URL shortener we&apos;ve used. Custom aliases, QR codes, and sub-millisecond redirects out of the box.&rdquo;
               </p>
               <div>
                 <div className="font-bold text-black text-lg">David Chen</div>

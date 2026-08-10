@@ -5,6 +5,24 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import {
+  Link2,
+  Plus,
+  Search,
+  RefreshCw,
+  Copy,
+  Trash2,
+  ExternalLink,
+  Layers,
+  Info,
+  BookOpen,
+  LogOut,
+  BarChart3,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  Sparkles
+} from "lucide-react";
 
 interface UrlRecord {
   shortCode: string;
@@ -110,126 +128,122 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="flex h-screen overflow-hidden antialiased font-body-md text-body-md bg-[#131314] text-[#e5e2e3]">
-      <nav className="bg-[#0e0e0f] border-r border-[#454655]/40 flex flex-col h-full fixed left-0 top-0 z-40 w-64 pt-4 pb-6 md:flex">
-        <div className="px-4 mb-8 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full border border-[#454655] flex items-center justify-center font-bold text-white bg-[#201f21]">
-            R
+    <div className="flex h-screen overflow-hidden bg-[#F4F7FB] text-[#1E293B] font-sans antialiased">
+      {/* Left Sidebar */}
+      <aside className="w-64 bg-white border-r border-slate-200/80 flex flex-col h-full z-40 hidden md:flex shrink-0">
+        <div className="p-5 flex items-center gap-3 border-b border-slate-100">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#60A5FA] flex items-center justify-center text-white font-black text-xl shadow-md shadow-blue-500/20">
+            M
           </div>
           <div>
-            <h2 className="font-h4 text-base font-bold text-[#e5e2e3]">
-              ROMER INFRA
+            <h2 className="font-extrabold text-sm text-slate-900 tracking-tight">
+              MaterialM URL
             </h2>
-            <div className="text-xs text-[#c6c5d8] font-mono opacity-70">
-              v2.4.0-stable
-            </div>
+            <p className="text-[10px] text-slate-400 font-medium">Link Management Console</p>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col gap-1 px-2">
-          <Link
-            className="group flex items-center gap-3 px-3 py-2 rounded text-[#50d8e9] bg-[#1c1b1d] border-r-2 border-[#50d8e9]"
-            href="/dashboard"
-          >
-            <span className="material-symbols-outlined text-[18px]">
-              terminal
-            </span>
-            <span className="text-xs uppercase tracking-widest font-semibold">
-              My Links
-            </span>
-          </Link>
-
-          <Link
-            className="group flex items-center gap-3 px-3 py-2 rounded text-[#c6c5d8] hover:text-[#e5e2e3] hover:bg-[#353436] transition-all"
-            href="/services"
-          >
-            <span className="material-symbols-outlined text-[18px]">
-              sensors
-            </span>
-            <span className="text-xs uppercase tracking-widest font-semibold">
-              Services
-            </span>
-          </Link>
-
-          <Link
-            className="group flex items-center gap-3 px-3 py-2 rounded text-[#c6c5d8] hover:text-[#e5e2e3] hover:bg-[#353436] transition-all"
-            href="/contact"
-          >
-            <span className="material-symbols-outlined text-[18px]">
-              contact_support
-            </span>
-            <span className="text-xs uppercase tracking-widest font-semibold">
-              Support
-            </span>
-          </Link>
+        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div>
+            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+              Dashboard
+            </div>
+            <nav className="space-y-1">
+              <Link
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#2563EB] bg-[#EBF3FE] shadow-xs"
+                href="/dashboard"
+              >
+                <Layers className="w-4 h-4" />
+                <span>My Short URLs</span>
+              </Link>
+              <Link
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                href="/services"
+              >
+                <Info className="w-4 h-4 text-slate-400" />
+                <span>Services</span>
+              </Link>
+              <Link
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                href="/contact"
+              >
+                <BookOpen className="w-4 h-4 text-slate-400" />
+                <span>Support</span>
+              </Link>
+              <Link
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                href="/admin"
+              >
+                <BarChart3 className="w-4 h-4 text-slate-400" />
+                <span>Admin Analytics</span>
+              </Link>
+            </nav>
+          </div>
         </div>
 
-        <div className="px-2 mt-auto flex flex-col gap-2 border-t border-[#454655]/40 pt-4">
+        <div className="p-4 border-t border-slate-100 space-y-3">
           <button
             onClick={() => {
               const el = document.getElementById("create-link-input");
               el?.focus();
             }}
-            className="mb-2 flex items-center justify-center gap-2 w-full py-2 px-3 rounded bg-[#5E6BFF] text-[#F0F1F2] text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-2xl bg-[#2563EB] text-white text-xs font-bold shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all"
           >
-            <span className="material-symbols-outlined text-[16px]">add</span>
+            <Plus className="w-4 h-4" />
             New Short URL
           </button>
 
           <button
             onClick={handleSignOut}
-            className="group flex items-center gap-3 px-3 py-2 rounded text-red-400 hover:text-red-300 hover:bg-[#353436] transition-all w-full text-left"
+            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-red-500 hover:bg-red-50 text-xs font-bold transition-all w-full"
           >
-            <span className="material-symbols-outlined text-[18px]">
-              logout
-            </span>
-            <span className="text-xs uppercase tracking-widest font-semibold">
-              Log out
-            </span>
+            <LogOut className="w-4 h-4" />
+            <span>Log out</span>
           </button>
         </div>
-      </nav>
+      </aside>
 
-      <main className="flex-1 ml-0 md:ml-64 flex flex-col h-full overflow-hidden bg-[#131314]">
-        <div className="px-6 py-6 border-b border-[#1B1C1E] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 bg-[#0e0e0f]">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col h-full overflow-hidden bg-[#F4F7FB]">
+        {/* Header Bar */}
+        <header className="px-6 py-5 bg-white border-b border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
           <div>
-            <h1 className="text-2xl font-bold text-[#e5e2e3] mb-1">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
               URL Management Console
             </h1>
-            <p className="text-[#c6c5d8] font-mono text-xs opacity-80">
-              High-performance link shortening & management
+            <p className="text-xs text-slate-500">
+              High-performance link shortening & redirection suite
             </p>
           </div>
 
-          <div className="flex gap-4 bg-[#101112] border border-[#232426] rounded p-2">
-            <div className="px-4 py-1 border-r border-[#1B1C1E]">
-              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">
-                Total Links
+          <div className="flex gap-4">
+            <div className="px-4 py-2 bg-slate-50 border border-slate-200/80 rounded-2xl flex items-center gap-3">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase">Total Links</p>
+                <p className="text-base font-black text-slate-900">{urls.length}</p>
               </div>
-              <div className="text-xl font-bold text-[#e5e2e3] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400"></span> {urls.length}
-              </div>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             </div>
 
-            <div className="px-4 py-1">
-              <div className="text-[10px] font-semibold text-[#c6c5d8] uppercase tracking-widest mb-1">
-                Redirect Engine
+            <div className="px-4 py-2 bg-slate-50 border border-slate-200/80 rounded-2xl flex items-center gap-3">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase">Engine Status</p>
+                <p className="text-base font-black text-blue-600">Active</p>
               </div>
-              <div className="text-xl font-bold text-[#50d8e9] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Active
-              </div>
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></span>
             </div>
           </div>
-        </div>
+        </header>
 
+        {/* Content Body */}
         <div className="flex-1 flex overflow-hidden flex-col lg:flex-row">
-          <div className="flex-1 overflow-y-auto p-6 custom-scrollbar border-r border-[#1B1C1E] flex flex-col gap-6">
-            <div className="bg-[#101112] border border-[#232426] rounded p-5">
-              <h2 className="text-sm uppercase tracking-wider font-semibold text-[#9A9DA3] mb-3 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">
-                  link
-                </span>
-                Create New Short URL
+          {/* URL Creation & Table List Column */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 border-r border-slate-200/80">
+            {/* Create Card */}
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-xs">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                Shorten a New Destination URL
               </h2>
               <form onSubmit={handleCreate} className="flex gap-3">
                 <input
@@ -239,123 +253,96 @@ export default function DashboardPage() {
                   placeholder="https://example.com/very-long-destination-url"
                   value={longUrl}
                   onChange={(e) => setLongUrl(e.target.value)}
-                  className="flex-1 bg-[#070708] border border-[#1B1C1E] rounded px-4 py-2.5 text-sm text-[#e5e2e3] placeholder:text-[#454655] focus:border-[#5E6BFF] focus:outline-none font-mono"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono"
                 />
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-white hover:bg-zinc-200 text-black px-6 py-2.5 rounded text-xs font-bold uppercase tracking-wider disabled:opacity-50 transition-colors"
+                  className="bg-[#2563EB] hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl text-xs font-bold shadow-md shadow-blue-500/20 disabled:opacity-50 transition-all"
                 >
                   {submitting ? "Shortening..." : "Shorten URL"}
                 </button>
               </form>
-
-              {error && (
-                <p className="text-xs text-red-400 mt-2 font-mono">{error}</p>
-              )}
+              {error && <p className="text-xs text-red-500 mt-2 font-medium">{error}</p>}
             </div>
 
+            {/* List Controls */}
             <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[#c6c5d8] text-[16px]">
-                    search
-                  </span>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search short code or URL..."
-                    className="bg-[#101112] border border-[#1B1C1E] rounded pl-8 pr-3 py-1.5 text-xs w-64 focus:border-[#5E6BFF] focus:outline-none text-[#e5e2e3] placeholder:text-[#454655] font-mono"
-                  />
-                </div>
+              <div className="relative w-64">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search short code or URL..."
+                  className="w-full bg-white border border-slate-200 rounded-2xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
               </div>
 
               <button
                 onClick={loadUrls}
-                className="bg-[#101112] border border-[#1B1C1E] rounded px-3 py-1.5 text-xs text-[#e5e2e3] hover:bg-[#151617] flex items-center gap-2 transition-colors"
+                className="bg-white border border-slate-200 rounded-2xl px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors"
               >
-                <span className="material-symbols-outlined text-[16px]">
-                  refresh
-                </span>{" "}
-                Refresh List
+                <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
+                Refresh
               </button>
             </div>
 
-            <div className="w-full bg-[#101112] border border-[#1B1C1E] rounded overflow-hidden">
+            {/* URL List Table */}
+            <div className="bg-white border border-slate-100 rounded-3xl shadow-xs overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#151617] border-b border-[#1B1C1E]">
-                    <th className="py-2.5 px-3 text-[10px] text-[#c6c5d8] uppercase tracking-widest font-semibold w-8"></th>
-                    <th className="py-2.5 px-3 text-[10px] text-[#c6c5d8] uppercase tracking-widest font-semibold">
-                      Short Code
-                    </th>
-                    <th className="py-2.5 px-3 text-[10px] text-[#c6c5d8] uppercase tracking-widest font-semibold">
-                      Original Destination URL
-                    </th>
-                    <th className="py-2.5 px-3 text-[10px] text-[#c6c5d8] uppercase tracking-widest font-semibold text-right">
-                      Actions
-                    </th>
+                  <tr className="bg-slate-50 border-b border-slate-100 text-[11px] text-slate-400 uppercase font-bold tracking-wider">
+                    <th className="py-3.5 px-4 w-8"></th>
+                    <th className="py-3.5 px-4">Short Code</th>
+                    <th className="py-3.5 px-4">Destination URL</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="font-mono text-xs">
+                <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700 font-mono">
                   {loading ? (
                     <tr>
-                      <td
-                        colSpan={4}
-                        className="py-8 text-center text-[#c6c5d8]"
-                      >
-                        Loading links...
+                      <td colSpan={4} className="py-12 text-center text-slate-400 font-sans">
+                        Loading short URLs...
                       </td>
                     </tr>
                   ) : filteredUrls.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={4}
-                        className="py-8 text-center text-[#c6c5d8]"
-                      >
-                        No shortened URLs found. Create one above!
+                      <td colSpan={4} className="py-12 text-center text-slate-400 font-sans">
+                        No short links created yet.
                       </td>
                     </tr>
                   ) : (
                     filteredUrls.map((item) => {
-                      const isSelected =
-                        selectedUrl?.shortCode === item.shortCode;
+                      const isSelected = selectedUrl?.shortCode === item.shortCode;
                       return (
                         <tr
                           key={item.shortCode}
                           onClick={() => setSelectedUrl(item)}
-                          className={`border-b border-[#1B1C1E] hover:bg-[#151617] cursor-pointer transition-colors h-11 ${
-                            isSelected
-                              ? "bg-[#151617] border-l-2 border-l-[#5E6BFF]"
-                              : ""
+                          className={`hover:bg-slate-50/80 cursor-pointer transition-colors ${
+                            isSelected ? "bg-blue-50/50 border-l-4 border-l-blue-600" : ""
                           }`}
                         >
-                          <td className="py-2 px-3 text-center">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                          <td className="py-3.5 px-4 text-center">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                           </td>
-                          <td className="py-2 px-3 text-[#50d8e9] font-bold">
+                          <td className="py-3.5 px-4 font-bold text-blue-600">
                             /{item.shortCode}
                           </td>
-                          <td className="py-2 px-3 text-[#c6c5d8] max-w-md truncate">
+                          <td className="py-3.5 px-4 text-slate-600 max-w-xs sm:max-w-md truncate font-sans">
                             {item.longUrl}
                           </td>
-                          <td className="py-2 px-3 text-right">
-                            <div
-                              className="flex justify-end gap-2"
-                              onClick={(e) => e.stopPropagation()}
-                            >
+                          <td className="py-3.5 px-4 text-right">
+                            <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                               <button
                                 onClick={() => handleCopy(item.shortCode)}
-                                className="px-2.5 py-1 bg-[#191A1C] hover:bg-[#25272a] border border-[#232426] rounded text-[11px] text-[#e5e2e3] font-sans"
+                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-sans text-slate-700 font-semibold"
                               >
-                                {copiedCode === item.shortCode
-                                  ? "Copied!"
-                                  : "Copy"}
+                                {copiedCode === item.shortCode ? "Copied!" : "Copy"}
                               </button>
                               <button
                                 onClick={() => handleDelete(item.shortCode)}
-                                className="px-2.5 py-1 bg-red-950/40 hover:bg-red-900/60 border border-red-800/40 rounded text-[11px] text-red-400 font-sans"
+                                className="px-3 py-1 bg-red-50 hover:bg-red-100 rounded-xl text-xs font-sans text-red-600 font-semibold"
                               >
                                 Delete
                               </button>
@@ -370,117 +357,83 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="w-full lg:w-96 bg-[#131314] flex flex-col h-full border-t lg:border-t-0 border-[#1B1C1E] z-10">
+          {/* Selected URL Inspector Sidebar */}
+          <div className="w-full lg:w-96 bg-white flex flex-col h-full border-t lg:border-t-0 border-slate-200/80 shrink-0">
             {selectedUrl ? (
               <>
-                <div className="p-6 border-b border-[#1B1C1E] bg-[#101112]">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-                      <span className="text-xs font-mono text-[#c6c5d8]">
-                        /{selectedUrl.shortCode}
-                      </span>
-                    </div>
+                <div className="p-6 border-b border-slate-100 bg-slate-50/50 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      ACTIVE
+                    </span>
                     <a
-                      href={`${process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link"}/${selectedUrl.shortCode}`}
+                      href={`${process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://url-shortner-production-4773.up.railway.app"}/${selectedUrl.shortCode}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[#c6c5d8] hover:text-white transition-colors"
+                      className="text-slate-400 hover:text-blue-600 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-[18px]">
-                        open_in_new
-                      </span>
+                      <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
-                  <h3 className="text-lg font-bold text-[#e5e2e3] mb-1">
-                    {process.env.NEXT_PUBLIC_SHORT_DOMAIN || "https://romer.link"}/{selectedUrl.shortCode}
+                  <h3 className="text-lg font-bold text-slate-900">
+                    /{selectedUrl.shortCode}
                   </h3>
-                  <div className="text-xs text-[#c6c5d8] font-mono break-all line-clamp-2">
+                  <p className="text-xs text-slate-500 font-mono break-all line-clamp-2">
                     {selectedUrl.longUrl}
-                  </div>
+                  </p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 custom-scrollbar flex flex-col gap-6 bg-[#0e0e0f]">
-                  <section>
-                    <h4 className="text-xs font-semibold text-[#c6c5d8] uppercase tracking-widest mb-3 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px]">
-                        info
-                      </span>{" "}
-                      Link Specs
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                  <section className="space-y-3">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      Link Telemetry Specs
                     </h4>
-                    <div className="bg-[#151617] border border-[#1B1C1E] rounded p-3 grid grid-cols-2 gap-y-3 gap-x-4">
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-[10px] text-[#716a8a] uppercase mb-1">
-                          Short Code
-                        </div>
-                        <div className="text-xs text-[#e5e2e3] font-mono">
-                          {selectedUrl.shortCode}
-                        </div>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase">Short Code</p>
+                        <p className="text-xs font-mono font-bold text-slate-900">{selectedUrl.shortCode}</p>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#716a8a] uppercase mb-1">
-                          Cache Layer
-                        </div>
-                        <div className="text-xs text-[#50d8e9] font-mono">
-                          Redis L1
-                        </div>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase">Cache Layer</p>
+                        <p className="text-xs font-mono font-bold text-blue-600">Redis L1</p>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#716a8a] uppercase mb-1">
-                          Storage
-                        </div>
-                        <div className="text-xs text-[#e5e2e3] font-mono">
-                          Supabase Postgres
-                        </div>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase">Analytics Engine</p>
+                        <p className="text-xs font-mono font-bold text-purple-600">ClickHouse DB</p>
                       </div>
                     </div>
                   </section>
 
-                  <section>
-                    <h4 className="text-xs font-semibold text-[#c6c5d8] uppercase tracking-widest mb-3 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px]">
-                        bolt
-                      </span>{" "}
-                      Actions
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => handleCopy(selectedUrl.shortCode)}
-                        className="bg-[#151617] border border-[#1B1C1E] rounded p-3 text-left hover:border-[#454655] transition-colors flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="material-symbols-outlined text-[16px] text-[#5E6BFF]">
-                            content_copy
-                          </span>
-                          <span className="text-xs text-[#e5e2e3]">
-                            Copy Short URL
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-[#c6c5d8] font-mono">
-                          {copiedCode === selectedUrl.shortCode
-                            ? "COPIED"
-                            : "COPY"}
-                        </span>
-                      </button>
-                    </div>
+                  <section className="space-y-2">
+                    <button
+                      onClick={() => handleCopy(selectedUrl.shortCode)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-left hover:bg-slate-100 transition-colors flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Copy className="w-4 h-4 text-blue-600" />
+                        <span className="text-xs font-bold text-slate-800">Copy Short Link</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-blue-600">
+                        {copiedCode === selectedUrl.shortCode ? "COPIED" : "COPY"}
+                      </span>
+                    </button>
                   </section>
                 </div>
 
-                <div className="p-4 bg-[#101112] border-t border-[#1B1C1E]">
+                <div className="p-4 border-t border-slate-100">
                   <button
                     onClick={() => handleDelete(selectedUrl.shortCode)}
-                    className="w-full bg-red-950/50 border border-red-800/50 text-red-400 rounded py-2 text-xs font-semibold hover:bg-red-900/60 transition-colors flex justify-center items-center gap-2"
+                    className="w-full bg-red-50 hover:bg-red-100 text-red-600 rounded-2xl py-3 text-xs font-bold transition-colors flex justify-center items-center gap-2"
                   >
-                    <span className="material-symbols-outlined text-[16px]">
-                      delete
-                    </span>{" "}
-                    Delete Link
+                    <Trash2 className="w-4 h-4" />
+                    Delete Short URL
                   </button>
                 </div>
               </>
             ) : (
-              <div className="p-8 text-center text-[#c6c5d8] text-xs">
-                Select a link from the table to view details
+              <div className="p-8 text-center text-slate-400 text-xs font-medium">
+                Select a link to view details
               </div>
             )}
           </div>

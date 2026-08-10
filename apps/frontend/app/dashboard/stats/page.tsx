@@ -31,15 +31,39 @@ export default function StatsPage() {
     try {
       const data = await apiFetch("/api/v1/urls");
       setUrls(data.urls || []);
-    } catch (err: any) {
-      setError(err.message || "Failed to load link statistics");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load link statistics";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadUrls();
+    let ignore = false;
+    async function init() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await apiFetch("/api/v1/urls");
+        if (!ignore) {
+          setUrls(data.urls || []);
+        }
+      } catch (err: unknown) {
+        if (!ignore) {
+          const msg = err instanceof Error ? err.message : "Failed to load link statistics";
+          setError(msg);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+    init();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   async function handleInspectStats(shortCode: string) {
@@ -47,8 +71,9 @@ export default function StatsPage() {
     try {
       const data = await apiFetch(`/api/v1/urls/${shortCode}/stats`);
       setSelectedStats(data);
-    } catch (err: any) {
-      setError(err.message || `Failed to fetch stats for /${shortCode}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : `Failed to fetch stats for /${shortCode}`;
+      setError(msg);
     } finally {
       setFetchingStats(null);
     }

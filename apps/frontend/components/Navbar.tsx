@@ -12,9 +12,8 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
-
   useEffect(() => {
+    const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
@@ -30,6 +29,7 @@ export default function Navbar() {
   }, []);
 
   async function handleSignOut() {
+    const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
     router.push("/");
