@@ -126,7 +126,6 @@ export async function shutdown(): Promise<void> {
   }
 }
 
-// Auto-start if executed directly via CLI
 if (import.meta.main || require.main === module) {
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
