@@ -1,6 +1,5 @@
-if (typeof (globalThis as any).__dirname === "undefined") {
-  (globalThis as any).__dirname = "";
-}
+
+const __dirname = "";
 
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
