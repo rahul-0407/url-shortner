@@ -100,6 +100,32 @@ export async function startProcessor(): Promise<void> {
   console.log(`[stream-processor] Listening to topic '${env.kafkaTopic}'...`);
 }
 
+export async function shutdown(): Promise<void> {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log("[stream-processor] Shutting down gracefully...");
+
+  if (flushTimer) {
+    clearInterval(flushTimer);
+    flushTimer = null;
+  }
+
+  try {
+    await consumer.disconnect();
+    console.log("[stream-processor] Kafka consumer disconnected.");
+  } catch (err: any) {
+    console.error("[stream-processor] Error disconnecting Kafka consumer:", err.message);
+  }
+
+  try {
+    await flushBuffer();
+    await closeClickHouse();
+    console.log("[stream-processor] ClickHouse client closed.");
+  } catch (err: any) {
+    console.error("[stream-processor] Error flushing final buffer to ClickHouse:", err.message);
+  }
+}
+
 // Auto-start if executed directly via CLI
 if (import.meta.main || require.main === module) {
   process.on("SIGINT", shutdown);
