@@ -9,13 +9,15 @@ function getSslConfig() {
   if (!env.kafkaSsl) return undefined;
   if (env.kafkaCaCert && env.kafkaClientKey && env.kafkaClientCert) {
     return {
-      rejectUnauthorized: true,
+      rejectUnauthorized: env.kafkaRejectUnauthorized,
       ca: [env.kafkaCaCert],
       key: env.kafkaClientKey,
       cert: env.kafkaClientCert,
     };
   }
-  return true;
+  return {
+    rejectUnauthorized: env.kafkaRejectUnauthorized,
+  };
 }
 
 const kafka = new Kafka({

@@ -42,6 +42,7 @@ export const env = {
   kafkaClientId: optional("KAFKA_CLIENT_ID", "url-shortener-backend"),
   kafkaTopic: optional("KAFKA_TOPIC", "clicks"),
   kafkaSsl: optional("KAFKA_SSL", "false") === "true",
+  kafkaRejectUnauthorized: optional("KAFKA_REJECT_UNAUTHORIZED", "false") === "true",
   kafkaSaslMechanism: optional("KAFKA_SASL_MECHANISM", "scram-sha-512"),
   kafkaSaslUsername: optional("KAFKA_SASL_USERNAME", ""),
   kafkaSaslPassword: optional("KAFKA_SASL_PASSWORD", ""),
