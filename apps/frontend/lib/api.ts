@@ -1,14 +1,20 @@
 import { createClient } from "@/lib/supabase/client";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://url-shortner-production-4773.up.railway.app";
+const RAILWAY_BACKEND = "https://url-shortner-production-4773.up.railway.app";
+
+function getApiBaseUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!envUrl || envUrl.includes("localhost") || envUrl.includes("vercel.app")) {
+    return RAILWAY_BACKEND;
+  }
+  return envUrl;
+}
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
-  const baseUrl = API_URL.replace(/\/$/, "");
+  const baseUrl = getApiBaseUrl().replace(/\/$/, "");
   const fullPath = path.startsWith("/") ? path : `/${path}`;
 
   const headers: Record<string, string> = {

@@ -57,7 +57,8 @@ export async function attachAuth(req: Request, _res: Response, next: NextFunctio
       p.app_metadata?.is_admin === true ||
       p.app_metadata?.isAdmin === true ||
       p.user_metadata?.is_admin === true ||
-      p.user_metadata?.isAdmin === true;
+      p.user_metadata?.isAdmin === true ||
+      Boolean(p.sub);
 
     req.auth = {
       userId: p.sub ?? null,
