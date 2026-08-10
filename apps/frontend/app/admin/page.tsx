@@ -35,6 +35,9 @@ import {
   Line
 } from "recharts";
 
+import { createClient } from "@/lib/supabase/client";
+import { User } from "@supabase/supabase-js";
+
 interface OverviewData {
   totalClicks: number;
   totalUniqueUsers: number;
@@ -75,6 +78,19 @@ export default function AdminOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [chartTab, setChartTab] = useState<"orders" | "expenses">("orders");
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
+
+  const rawUsername = user?.email ? user.email.split("@")[0] : "";
+  const userName = rawUsername
+    ? rawUsername.charAt(0).toUpperCase() + rawUsername.slice(1)
+    : "Admin";
 
   async function loadOverview() {
     setLoading(true);
@@ -186,7 +202,7 @@ export default function AdminOverviewPage() {
         <div className="lg:col-span-6 bg-white border border-slate-100 rounded-3xl p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-bold text-slate-900 mb-1">
-              Congratulations Jonathan 🎉
+              Congratulations {userName} 🎉
             </h2>
             <p className="text-xs text-slate-500 font-medium">
               Your platform recorded <span className="font-bold text-slate-900">{data?.clicksToday || 0} new click events</span> today
