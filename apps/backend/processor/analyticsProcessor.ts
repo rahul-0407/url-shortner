@@ -11,17 +11,21 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getSslConfig() {
   if (!env.kafkaSsl) return undefined;
-  if (env.kafkaCaCert && env.kafkaClientKey && env.kafkaClientCert) {
-    return {
-      rejectUnauthorized: env.kafkaRejectUnauthorized,
-      ca: [env.kafkaCaCert],
-      key: env.kafkaClientKey,
-      cert: env.kafkaClientCert,
-    };
-  }
-  return {
-    rejectUnauthorized: env.kafkaRejectUnauthorized,
+
+  const sslOptions: any = {
+    rejectUnauthorized: false,
   };
+
+  if (env.kafkaCaCert) {
+    sslOptions.ca = [env.kafkaCaCert.replace(/\\n/g, "\n")];
+  }
+
+  if (env.kafkaClientKey && env.kafkaClientCert) {
+    sslOptions.key = env.kafkaClientKey.replace(/\\n/g, "\n");
+    sslOptions.cert = env.kafkaClientCert.replace(/\\n/g, "\n");
+  }
+
+  return sslOptions;
 }
 
 const kafka = new Kafka({
