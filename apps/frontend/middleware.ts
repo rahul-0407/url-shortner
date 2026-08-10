@@ -1,15 +1,17 @@
+if (typeof (globalThis as any).__dirname === "undefined") {
+  (globalThis as any).__dirname = "";
+}
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    "https://cgzfvvwtmltwstvpmzzy.supabase.co";
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseAnonKey) {
     return response;
   }
 
