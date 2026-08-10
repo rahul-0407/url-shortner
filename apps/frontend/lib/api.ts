@@ -3,9 +3,13 @@ import { createClient } from "@/lib/supabase/client";
 const FALLBACK_API = "https://url-shortner-production-4773.up.railway.app";
 
 function getApiBaseUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  let envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!envUrl || envUrl.includes("localhost") || envUrl.includes("vercel.app")) {
-    return FALLBACK_API;
+    envUrl = FALLBACK_API;
+  }
+  envUrl = envUrl.trim();
+  if (!envUrl.startsWith("http://") && !envUrl.startsWith("https://")) {
+    envUrl = `https://${envUrl}`;
   }
   return envUrl;
 }
@@ -16,9 +20,7 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     data: { session },
   } = await supabase.auth.getSession();
 
-
   const baseUrl = getApiBaseUrl().replace(/\/$/, "");
-
   const fullPath = path.startsWith("/") ? path : `/${path}`;
 
   const headers: Record<string, string> = {
@@ -26,7 +28,6 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     ...(options.headers as Record<string, string>),
   };
 
- 
   if (session?.access_token) {
     headers.Authorization = `Bearer ${session.access_token}`;
   }
