@@ -1,20 +1,24 @@
 import { createClient } from "@/lib/supabase/client";
 
-const RAILWAY_BACKEND = "https://url-shortner-production-4773.up.railway.app";
+const FALLBACK_API = "https://url-shortner-production-4773.up.railway.app";
 
 function getApiBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!envUrl || envUrl.includes("localhost") || envUrl.includes("vercel.app")) {
-    return RAILWAY_BACKEND;
+    return FALLBACK_API;
   }
   return envUrl;
 }
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
 
   const baseUrl = getApiBaseUrl().replace(/\/$/, "");
+
   const fullPath = path.startsWith("/") ? path : `/${path}`;
 
   const headers: Record<string, string> = {
@@ -22,8 +26,9 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     ...(options.headers as Record<string, string>),
   };
 
+ 
   if (session?.access_token) {
-    headers["Authorization"] = `Bearer ${session.access_token}`;
+    headers.Authorization = `Bearer ${session.access_token}`;
   }
 
   const res = await fetch(`${baseUrl}${fullPath}`, {
@@ -32,7 +37,9 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ error: res.statusText }));
+    const errorData = await res.json().catch(() => ({
+      error: res.statusText,
+    }));
     throw new Error(errorData.error || `API error: ${res.status}`);
   }
 
