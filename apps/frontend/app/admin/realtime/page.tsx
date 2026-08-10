@@ -175,42 +175,60 @@ export default function AdminRealtimePage() {
               <span className="text-[10px] text-slate-400 font-mono">5-Minute Horizon</span>
             </div>
 
-            {!data?.clicksPerMinute || data.clicksPerMinute.length === 0 ? (
-              <div className="h-56 flex items-center justify-center text-xs text-slate-400">
-                No traffic recorded in the last 5 minutes.
-              </div>
-            ) : (
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={data.clicksPerMinute} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="realtimeGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="minute" stroke="#94A3B8" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1E293B",
-                        borderRadius: "12px",
-                        fontSize: "12px",
-                        color: "#fff",
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="clicks"
-                      stroke="#10B981"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#realtimeGradient)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            )}
+            {(() => {
+              // Ensure we always have 5 discrete minute points for a smooth area chart instead of a single dot
+              const now = new Date();
+              const chartData: Array<{ minute: string; clicks: number }> = [];
+
+              for (let i = 4; i >= 0; i--) {
+                const d = new Date(now.getTime() - i * 60 * 1000);
+                const timeLabel = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                // Match against ClickHouse minute timestamp
+                const match = data?.clicksPerMinute?.find((item) => {
+                  const itemDate = new Date(item.minute.includes("T") ? item.minute : item.minute.replace(" ", "T"));
+                  return !isNaN(itemDate.getTime()) && itemDate.getMinutes() === d.getMinutes();
+                });
+
+                chartData.push({
+                  minute: timeLabel,
+                  clicks: match ? match.clicks : (i === 0 && data?.clicksLast5Min ? data.clicksLast5Min : 0),
+                });
+              }
+
+              return (
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="realtimeGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="minute" stroke="#94A3B8" fontSize={11} tickLine={false} />
+                      <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} allowDecimals={false} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#1E293B",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                          color: "#fff",
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="clicks"
+                        stroke="#10B981"
+                        strokeWidth={3}
+                        fillOpacity={1}
+                        fill="url(#realtimeGradient)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Event Stream Table Log */}
